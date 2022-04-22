@@ -1,5 +1,9 @@
 import React from 'react'
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
+import { combineReducers, createStore } from 'redux'
+import { Provider } from 'react-redux'
+
+import usersReducer from './reducers/users-reducer'
 
 import Home from './components/Home/Home'
 import Login from './components/Login/Login'
@@ -8,6 +12,12 @@ import Profile from './components/Profile/Profile'
 import SearchResults from './components/SearchResults/SearchResults'
 
 import './App.css'
+
+const reducer = combineReducers({
+  user: usersReducer
+})
+
+const store = createStore(reducer)
 
 const Navigation = () => {
   return (
@@ -21,22 +31,24 @@ const Navigation = () => {
   )
 }
 
-function App () {
+const App = () => {
   return (
-    <BrowserRouter>
-      <div className="container">
-        <Navigation />
-        <Routes>
-          <Route path="/">
-            <Route index element={<Home />} />
-            <Route path="login" element={<Login />} />
-            <Route path="details" element={<Parody />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="search" element={<SearchResults />} />
-          </Route>
-        </Routes>
-      </div>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <div className="container">
+          <Navigation />
+          <Routes>
+            <Route path="/">
+              <Route index element={<Home />} />
+              <Route path="login" element={<Login />} />
+              <Route path="details" element={<Parody />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="search" element={<SearchResults />} />
+            </Route>
+          </Routes>
+        </div>
+      </BrowserRouter>
+    </Provider>
   )
 }
 

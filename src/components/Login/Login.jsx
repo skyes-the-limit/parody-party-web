@@ -20,19 +20,19 @@ const AccountForm = ({ handleSubmit }) => {
       {({ errors, touched }) => (
         <Form>
           <label htmlFor='username'>Username</label>
-          <Field name="username" />
+          <Field name='username' />
           {(errors.username && touched.username) &&
             <div>{errors.username}</div>
           }
 
           <label htmlFor='password'>Password</label>
-          <Field type="password" name="password" />
+          <Field type='password' name='password' />
           {(errors.password && touched.password) &&
             <div>{errors.password}</div>
           }
 
           {errors.email && touched.email ? <div>{errors.email}</div> : null}
-          <button type="submit" disabled={!Object.keys(errors).length === 0 && Object.keys(touched).length === 0}>Submit</button>
+          <button type='submit' disabled={!Object.keys(errors).length === 0 && Object.keys(touched).length === 0}>Submit</button>
         </Form>
       )}
     </Formik>
@@ -58,8 +58,8 @@ const SignupSchema = Yup.object().shape({
 const Login = () => {
   // If the user is already logged in, redirect to the profile page
   const user = useSelector(state => state.user)
-  if (Object.keys(user).length !== 0) {
-    return (<Navigate replace to="/profile" />)
+  if (user) {
+    return <Navigate replace to='/profile' />
   }
 
   const dispatch = useDispatch()

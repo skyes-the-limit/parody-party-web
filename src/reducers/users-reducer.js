@@ -7,7 +7,7 @@ import {
 } from '../actions/users-actions.js'
 
 // State only bothers storing the currently logged in user
-const usersReducer = (state = {}, action) => {
+const usersReducer = (state = null, action) => {
   switch (action.type) {
     case FIND_BY_USERNAME:
       return action.user

@@ -35,15 +35,18 @@ const App = () => {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <div className="container">
+        <div className='container'>
           <Navigation />
           <Routes>
-            <Route path="/">
+            <Route path='/'>
               <Route index element={<Home />} />
-              <Route path="login" element={<Login />} />
-              <Route path="details" element={<Parody />} />
-              <Route path="profile" element={<Profile />} />
-              <Route path="search" element={<SearchResults />} />
+              <Route path='login' element={<Login />} />
+              <Route path='details' element={<Parody />} />
+              {/* Yes, this really is the recommended way to have optional parameters:
+              https://github.com/remix-run/react-router/issues/7285 */}
+              <Route path='profile' element={<Profile />} />
+              <Route path='profile/:username' element={<Profile />} />
+              <Route path='search' element={<SearchResults />} />
             </Route>
           </Routes>
         </div>

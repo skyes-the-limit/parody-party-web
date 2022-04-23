@@ -32,7 +32,11 @@ const AccountForm = ({ handleSubmit }) => {
           }
 
           {errors.email && touched.email ? <div>{errors.email}</div> : null}
-          <button type='submit' disabled={!Object.keys(errors).length === 0 && Object.keys(touched).length === 0}>Submit</button>
+          <button
+            type='submit'
+            disabled={!Object.keys(errors).length === 0 && Object.keys(touched).length === 0}>
+            Submit
+          </button>
         </Form>
       )}
     </Formik>

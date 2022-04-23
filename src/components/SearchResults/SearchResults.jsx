@@ -32,7 +32,11 @@ const SearchResults = () => {
               <div>{errors.query}</div>
             }
 
-            <button type='submit' disabled={!Object.keys(errors).length === 0 && Object.keys(touched).length === 0}>Search</button>
+            <button
+              type='submit'
+              disabled={!Object.keys(errors).length === 0 && Object.keys(touched).length === 0}>
+              Search
+            </button>
           </Form>
         )}
       </Formik>

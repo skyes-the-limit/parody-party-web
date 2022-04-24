@@ -42,7 +42,8 @@ const App = () => {
             <Route path='/'>
               <Route index element={<Home />} />
               <Route path='login' element={<Login />} />
-              <Route path='details' element={<Parody />} />
+              <Route path='details' element={<Parody mode={'CREATE'} />} />
+              <Route path='details/:originalId/:parodyId' element={<Parody mode={'VIEW'} />} />
               {/* Yes, this really is the recommended way to have optional parameters:
               https://github.com/remix-run/react-router/issues/7285 */}
               <Route path='profile' element={<Profile />} />

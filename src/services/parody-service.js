@@ -17,6 +17,12 @@ const findParodyByOriginal = async (originalGeniusID) => {
   return response.data
 }
 
+const findParodyById = async (parodyId) => {
+  const response = await axios.get(`${PARODY_API}/${parodyId}`)
+  return response.data
+}
+
 export default {
-  findParodyByOriginal
+  findParodyByOriginal,
+  findParodyById
 }

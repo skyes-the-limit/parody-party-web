@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import searchService from '../../services/search-service.js'
+import searchService from '../../services/genius-service.js'
 import parodyService from '../../services/parody-service.js'
 
 const Song = ({ song }) => {
   const [results, setResults] = useState(null)
-  console.log(song)
 
   useEffect(() => {
     parodyService.findParodyByOriginal(song.id).then((response) => { setResults(response) })
@@ -17,14 +16,24 @@ const Song = ({ song }) => {
     <div>
       <h6>{song.full_title}</h6>
       <ul>
+        <li>
+          <Link to={`/details/${song.id}/`} >
+            Create a parody for this song!
+          </Link>
+        </li>
         {results && results.length === 0 &&
           <li>No parodies written for this song yet!</li>
         }
         {results && results.length > 0 &&
           results.map((parody, index) => {
+            console.log(parody)
             return (
               <li key={`${song.full_title}-parody-${index}`}>
-                {JSON.stringify(parody)}
+                <Link to={`/details/${song.id}/${parody._id}`} >
+                  {parody.title} by {parody.author}
+                </Link>
+                <br />
+                <span>{parody.likes} likes</span>
               </li>
             )
           })

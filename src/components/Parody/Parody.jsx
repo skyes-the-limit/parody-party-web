@@ -1,4 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
+import { useParams } from 'react-router-dom'
+
+import parodyService from '../../services/parody-service.js'
+import geniusService from '../../services/genius-service.js'
 
 /*
 The details page allow users to view a details view of the search result. They can see more information when they click
@@ -16,10 +21,56 @@ on the search result. The details page must fulfill the following requirements.
 
 */
 
-const Parody = () => {
+const Parody = ({ mode }) => {
+  const [original, setOriginal] = useState(null)
+  const [parody, setParody] = useState(null)
+  const { originalId, parodyId } = useParams()
+
+  useEffect(() => {
+    if (!original) {
+      geniusService.getSongById(originalId).then((response) => { setOriginal(response.song) })
+    }
+  }, [original, originalId])
+
+  useEffect(() => {
+    if (!parody && mode !== 'CREATE') {
+      parodyService.findParodyById(parodyId).then((response) => { setParody(response) })
+    }
+  }, [mode, parody, parodyId])
+
+  console.log(parody)
+  console.log(original)
+
   return (
-    <h1>Parody Page</h1>
+    <div>
+      <h1>Parody Page</h1>
+      {original && (
+        <div>
+          <h5>Original:</h5>
+          <h6>
+            <a
+              href={original.url}
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              {original.full_title}
+            </a>
+          </h6>
+        </div>
+      )}
+      {parody && (
+        <div>
+          <h5>Parody:</h5>
+          <h6>{parody.title} by {parody.author}</h6>
+          <div style={{ whiteSpace: 'pre-wrap' }}>{parody.lyrics}</div>
+        </div>
+      )}
+    </div>
   )
+}
+
+Parody.propTypes = {
+  mode: PropTypes.oneOf(['CREATE', 'EDIT', 'VIEW'])
 }
 
 export default Parody

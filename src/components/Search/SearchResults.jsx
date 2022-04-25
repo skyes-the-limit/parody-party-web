@@ -4,9 +4,13 @@ import PropTypes from 'prop-types'
 
 import searchService from '../../services/genius-service.js'
 import parodyService from '../../services/parody-service.js'
+import { useSelector } from 'react-redux'
 
 const Song = ({ song }) => {
   const [results, setResults] = useState(null)
+  const loggedInUser = useSelector(state => state.user)
+  console.log('loggedInUser')
+  console.log(loggedInUser)
 
   useEffect(() => {
     parodyService.findParodyByOriginal(song.id).then((response) => { setResults(response) })
@@ -16,11 +20,13 @@ const Song = ({ song }) => {
     <div>
       <h6>{song.full_title}</h6>
       <ul>
-        <li>
-          <Link to={`/details/${song.id}/`} >
-            Create a parody for this song!
-          </Link>
-        </li>
+        {loggedInUser && (
+          <li>
+            <Link to={`/details/${song.id}/`} >
+              Create a parody for this song!
+            </Link>
+          </li>
+        )}
         {results && results.length === 0 &&
           <li>No parodies written for this song yet!</li>
         }

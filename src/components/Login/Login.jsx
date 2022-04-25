@@ -50,7 +50,6 @@ const AccountForm = ({ handleSubmit }) => {
             <div>{errors.password}</div>
           }
 
-          {errors.email && touched.email ? <div>{errors.email}</div> : null}
           <button
             type='submit'
             disabled={!Object.keys(errors).length === 0 && Object.keys(touched).length === 0}>

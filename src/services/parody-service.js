@@ -22,7 +22,13 @@ const findParodyById = async (parodyId) => {
   return response.data
 }
 
+const createParody = async (parody) => {
+  const response = await axios.post(PARODY_API, parody)
+  return response.data
+}
+
 export default {
   findParodyByOriginal,
-  findParodyById
+  findParodyById,
+  createParody
 }

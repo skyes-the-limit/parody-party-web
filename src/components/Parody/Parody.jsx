@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 
 import parodyService from '../../services/parody-service.js'
 import geniusService from '../../services/genius-service.js'
+import CreateParodyForm from './CreateParodyForm.jsx'
 
 /*
 The details page allow users to view a details view of the search result. They can see more information when they click
@@ -21,6 +22,10 @@ on the search result. The details page must fulfill the following requirements.
 
 */
 
+const CREATE = 'CREATE'
+const EDIT = 'EDIT'
+const VIEW = 'VIEW'
+
 const Parody = ({ mode }) => {
   const [original, setOriginal] = useState(null)
   const [parody, setParody] = useState(null)
@@ -33,11 +38,16 @@ const Parody = ({ mode }) => {
   }, [original, originalId])
 
   useEffect(() => {
-    if (!parody && mode !== 'CREATE') {
+    if (!parody && mode !== CREATE) {
       parodyService.findParodyById(parodyId).then((response) => { setParody(response) })
     }
   }, [mode, parody, parodyId])
 
+  if (!original) {
+    return (
+      <div>Loading...</div>
+    )
+  }
   console.log(parody)
   console.log(original)
 
@@ -65,12 +75,15 @@ const Parody = ({ mode }) => {
           <div style={{ whiteSpace: 'pre-wrap' }}>{parody.lyrics}</div>
         </div>
       )}
+      {mode === CREATE && (
+        <CreateParodyForm originalId={originalId} />
+      )}
     </div>
   )
 }
 
 Parody.propTypes = {
-  mode: PropTypes.oneOf(['CREATE', 'EDIT', 'VIEW'])
+  mode: PropTypes.oneOf([CREATE, EDIT, VIEW])
 }
 
 export default Parody

@@ -1,8 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-
-import service from '../../services/search-service.js'
 
 /*
 The website should provide users the capability to search content from a remote service and display a summary of the
@@ -30,12 +28,10 @@ const SearchSchema = Yup.object().shape({
     .required('Required')
 })
 
-const SearchResults = () => {
-  const [results, setResults] = useState(null)
-
+const Search = () => {
   return (
     <div>
-      <h1>SearchResults Page</h1>
+      <h1>Search Page</h1>
 
       <Formik
         initialValues={{
@@ -43,7 +39,7 @@ const SearchResults = () => {
         }}
         validationSchema={SearchSchema}
         onSubmit={(values) => {
-          service.searchSongs(values.query).then((response) => { setResults(response.hits) })
+          location.href = `${location.href}/${values.query}`
         }}
       >
         {({ errors, touched }) => (
@@ -61,16 +57,8 @@ const SearchResults = () => {
           </Form>
         )}
       </Formik>
-
-      {results && (
-        <ul>
-          {results.map((hit, index) => {
-            return <li key={index}>{hit.result.full_title}</li>
-          })}
-        </ul>
-      )}
     </div>
   )
 }
 
-export default SearchResults
+export default Search

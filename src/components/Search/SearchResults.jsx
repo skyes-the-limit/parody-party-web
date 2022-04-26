@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import PropTypes from 'prop-types'
 // import { useSelector } from 'react-redux'
 
 import searchService from '../../services/genius-service.js'
 import parodyService from '../../services/parody-service.js'
+import songShape from '../../definitions/song-shape.js'
+import parodyShape from '../../definitions/parody-shape.js'
 
 const ParodyPreview = ({ song, parody }) => {
   return (
@@ -75,9 +76,11 @@ const SearchResults = () => {
   }, [query])
 
   if (!results) {
-    return <h1 className='mt-4 text-muted'>
-      Loading...
-    </h1>
+    return (
+      <div className='mt-4 mx-auto' style={{ width: '48em' }}>
+        <h1>Loading...</h1>
+      </div>
+    )
   }
 
   return (
@@ -94,52 +97,6 @@ const SearchResults = () => {
     </div>
   )
 }
-
-const songShape = PropTypes.shape({
-  annotation_count: PropTypes.number,
-  api_path: PropTypes.string,
-  artist_names: PropTypes.string,
-  full_title: PropTypes.string,
-  header_image_thumbnail_url: PropTypes.string,
-  header_image_url: PropTypes.string,
-  id: PropTypes.number,
-  lyrics_owner_id: PropTypes.number,
-  lyrics_state: PropTypes.string,
-  path: PropTypes.string,
-  primary_artist: PropTypes.shape({
-    api_path: PropTypes.string,
-    header_image_url: PropTypes.string,
-    id: PropTypes.number,
-    image_url: PropTypes.string,
-    iq: PropTypes.number,
-    is_meme_verified: PropTypes.bool,
-    is_verified: PropTypes.bool,
-    name: PropTypes.string,
-    url: PropTypes.string
-  }),
-  pyongs_count: PropTypes.number,
-  song_art_image_thumbnail_url: PropTypes.string,
-  song_art_image_url: PropTypes.string,
-  stats: PropTypes.shape({
-    hot: PropTypes.bool,
-    pageviews: PropTypes.number,
-    unreviewed_annotations: PropTypes.number
-  }),
-  title: PropTypes.string,
-  title_with_featured: PropTypes.string,
-  url: PropTypes.string
-})
-
-const parodyShape = PropTypes.shape({
-  author: PropTypes.string,
-  comments: PropTypes.array,
-  date: PropTypes.date,
-  likes: PropTypes.number,
-  lyrics: PropTypes.string,
-  originalGeniusID: PropTypes.number,
-  title: PropTypes.string,
-  _id: PropTypes.string
-})
 
 Song.propTypes = {
   song: songShape

@@ -4,7 +4,8 @@ import { useParams } from 'react-router-dom'
 
 import parodyService from '../../services/parody-service.js'
 import geniusService from '../../services/genius-service.js'
-import CreateParodyForm from './CreateParodyForm.jsx'
+import MODE from '../../definitions/parody-mode.js'
+import CreateOrEditParodyForm from './CreateOrEditParodyForm.jsx'
 
 /*
 The details page allow users to view a details view of the search result. They can see more information when they click
@@ -22,13 +23,8 @@ on the search result. The details page must fulfill the following requirements.
 
 */
 
-const MODE = {
-  CREATE: 'CREATE',
-  EDIT: 'EDIT',
-  VIEW: 'VIEW'
-}
-
-const Parody = ({ mode }) => {
+const Parody = ({ initialMode = MODE.VIEW }) => {
+  const [mode, setMode] = useState(initialMode)
   const [original, setOriginal] = useState(null)
   const [parody, setParody] = useState(null)
   const { originalId, parodyId } = useParams()
@@ -45,7 +41,7 @@ const Parody = ({ mode }) => {
     }
   }, [mode, parody, parodyId])
 
-  if (!original) {
+  if (!original || (!parody && mode !== MODE.CREATE)) {
     return (
       <div>Loading...</div>
     )
@@ -54,38 +50,42 @@ const Parody = ({ mode }) => {
   console.log(original)
 
   return (
-    <div>
-      <h1>Parody Page</h1>
-      {original && (
+    <div className='mt-4 mx-auto' style={{ width: '48em' }}>
+      <h5>Original:</h5>
+      <h6>
+        <a
+          href={original.url}
+          target='_blank'
+          rel='noopener noreferrer'
+        >
+          {original.full_title}
+        </a>
+      </h6>
+
+      {parody && mode === MODE.VIEW && (
         <div>
-          <h5>Original:</h5>
-          <h6>
-            <a
-              href={original.url}
-              target='_blank'
-              rel='noopener noreferrer'
-            >
-              {original.full_title}
-            </a>
-          </h6>
-        </div>
-      )}
-      {parody && (
-        <div>
-          <h5>Parody:</h5>
+          <h5>Parody:
+            <button type='button' className='btn btn-dark' onClick={() => setMode(MODE.EDIT)}>Edit</button>
+          </h5>
           <h6>{parody.title} by {parody.author}</h6>
           <div style={{ whiteSpace: 'pre-wrap' }}>{parody.lyrics}</div>
         </div>
       )}
-      {mode === MODE.CREATE && (
-        <CreateParodyForm originalId={originalId} />
+
+      {(mode === MODE.CREATE || mode === MODE.EDIT) && (
+        <CreateOrEditParodyForm
+          original={original}
+          parody={mode === MODE.EDIT ? parody : null}
+          mode={mode}
+          setMode={setMode}
+        />
       )}
     </div>
   )
 }
 
 Parody.propTypes = {
-  mode: PropTypes.oneOf([MODE.CREATE, MODE.EDIT, MODE.VIEW])
+  initialMode: PropTypes.oneOf([MODE.CREATE, MODE.EDIT, MODE.VIEW])
 }
 
 export default Parody

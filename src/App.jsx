@@ -4,6 +4,7 @@ import { combineReducers, createStore } from 'redux'
 import { Provider } from 'react-redux'
 
 import usersReducer from './reducers/users-reducer'
+import PARODY_MODE from './definitions/parody-mode.js'
 
 import Navigation from './components/Navigation/Navigation'
 import Home from './components/Home/Home'
@@ -31,8 +32,8 @@ const App = () => {
             <Route path='/'>
               <Route index element={<Home />} />
               <Route path='login' element={<Login />} />
-              <Route path='details/:originalId' element={<Parody mode={'CREATE'} />} />
-              <Route path='details/:originalId/:parodyId' element={<Parody mode={'VIEW'} />} />
+              <Route path='details/:originalId' element={<Parody initialMode={PARODY_MODE.CREATE} />} />
+              <Route path='details/:originalId/:parodyId' element={<Parody initialMode={PARODY_MODE.VIEW} />} />
               {/* Yes, this really is the recommended way to have optional parameters:
               https://github.com/remix-run/react-router/issues/7285 */}
               <Route path='profile' element={<Profile />} />

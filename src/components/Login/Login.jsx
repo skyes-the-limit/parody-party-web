@@ -26,7 +26,12 @@ The login and register page allow users to register with the web site and then l
 
 */
 
-const AccountForm = ({ handleSubmit }) => {
+const MODE = {
+  LOGIN: 'LOGIN',
+  SIGNUP: 'SIGNUP'
+}
+
+const AccountForm = ({ handleSubmit, mode }) => {
   return (
     <Formik
       initialValues={{
@@ -38,9 +43,21 @@ const AccountForm = ({ handleSubmit }) => {
     >
       {({ errors, touched }) => (
         <Form>
+          {mode === MODE.SIGNUP && (
+            <div className='form-group'>
+              <label htmlFor='displayName' className='form-label mt-4'>Display Name</label>
+              <Field name='displayName' className='form-control' />
+              {(errors.displayName && touched.displayName) &&
+                <small className='invalid-feedback'>
+                  {errors.displayName}
+                </small>
+              }
+            </div>
+          )}
+
           <div className='form-group'>
-            <label htmlFor='exampleInputEmail1' className='form-label mt-4'>Username</label>
-            <Field name='username' className='form-control' />
+            <label htmlFor='username' className='form-label mt-4'>Username</label>
+            <Field name='username' id="usernameField" className='form-control' />
             {(errors.username && touched.username) &&
               <small className='invalid-feedback'>
                 {errors.username}
@@ -49,8 +66,8 @@ const AccountForm = ({ handleSubmit }) => {
           </div>
 
           <div className='form-group'>
-            <label htmlFor='exampleInputEmail1' className='form-label mt-4'>Password</label>
-            <Field name='password' className='form-control' />
+            <label htmlFor='password' className='form-label mt-4'>Password</label>
+            <Field type='password' name='password' id="passwordField" className='form-control' />
             {(errors.password && touched.password) &&
               <small className='invalid-feedback'>
                 {errors.password}
@@ -72,7 +89,8 @@ const AccountForm = ({ handleSubmit }) => {
 }
 
 AccountForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired
+  handleSubmit: PropTypes.func.isRequired,
+  mode: PropTypes.oneOf([MODE.LOGIN, MODE.SIGNUP])
 }
 
 const SignupSchema = Yup.object().shape({
@@ -86,11 +104,6 @@ const SignupSchema = Yup.object().shape({
     .max(32, 'Password may not exceed 32 characters')
     .required('Required')
 })
-
-const MODE = {
-  LOGIN: 'LOGIN',
-  SIGNUP: 'SIGNUP'
-}
 
 const Login = () => {
   const [mode, setMode] = useState(MODE.LOGIN)
@@ -112,7 +125,7 @@ const Login = () => {
 
   return (
     <div className='mt-4 d-flex justify-content-center'>
-      <div className='card border-primary mb-3' style={{ width: '30rem' }}>
+      <div className='card border-primary mb-3' style={{ width: '32em' }}>
         <div className='card-header p-0'>
           <div className='btn-group w-100' role='group' aria-label='Basic radio toggle button group'>
             <input
@@ -139,11 +152,11 @@ const Login = () => {
         </div>
         <div className='card-body pt-0'>
           {mode === MODE.LOGIN && (
-            <AccountForm handleSubmit={submitLogin} />
+            <AccountForm handleSubmit={submitLogin} mode={MODE.LOGIN} />
           )}
 
           {mode === MODE.SIGNUP && (
-            <AccountForm handleSubmit={submitCreateAccount} />
+            <AccountForm handleSubmit={submitCreateAccount} mode={MODE.SIGNUP} />
           )}
         </div>
       </div>

@@ -20,13 +20,12 @@ const Song = ({ song }) => {
     <div>
       <h6>{song.full_title}</h6>
       <ul>
-        {loggedInUser && (
-          <li>
-            <Link to={`/details/${song.id}/`} >
-              Create a parody for this song!
-            </Link>
-          </li>
-        )}
+        <li>
+          {/* Link should direct to Login if user is unauthenticated */}
+          <Link to={`/details/${song.id}/`} >
+            Create a parody for this song!
+          </Link>
+        </li>
         {results && results.length === 0 &&
           <li>No parodies written for this song yet!</li>
         }

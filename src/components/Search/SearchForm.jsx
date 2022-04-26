@@ -36,15 +36,12 @@ const SearchForm = () => {
       }}
       validationSchema={SearchSchema}
       onSubmit={(values) => {
-        location.href = `${location.href}search/${values.query}`
+        location.href = `${location.origin}/search/${values.query}`
       }}
     >
       {({ errors, touched }) => (
         <Form className='d-flex me-auto'>
           <Field name='query' className='form-control me-sm-2' />
-          {(errors.query && touched.query) &&
-            <div>{errors.query}</div>
-          }
 
           <button
             type='submit'

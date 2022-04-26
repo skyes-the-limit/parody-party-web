@@ -22,9 +22,11 @@ on the search result. The details page must fulfill the following requirements.
 
 */
 
-const CREATE = 'CREATE'
-const EDIT = 'EDIT'
-const VIEW = 'VIEW'
+const MODE = {
+  CREATE: 'CREATE',
+  EDIT: 'EDIT',
+  VIEW: 'VIEW'
+}
 
 const Parody = ({ mode }) => {
   const [original, setOriginal] = useState(null)
@@ -38,7 +40,7 @@ const Parody = ({ mode }) => {
   }, [original, originalId])
 
   useEffect(() => {
-    if (!parody && mode !== CREATE) {
+    if (!parody && mode !== MODE.CREATE) {
       parodyService.findParodyById(parodyId).then((response) => { setParody(response) })
     }
   }, [mode, parody, parodyId])
@@ -75,7 +77,7 @@ const Parody = ({ mode }) => {
           <div style={{ whiteSpace: 'pre-wrap' }}>{parody.lyrics}</div>
         </div>
       )}
-      {mode === CREATE && (
+      {mode === MODE.CREATE && (
         <CreateParodyForm originalId={originalId} />
       )}
     </div>
@@ -83,7 +85,7 @@ const Parody = ({ mode }) => {
 }
 
 Parody.propTypes = {
-  mode: PropTypes.oneOf([CREATE, EDIT, VIEW])
+  mode: PropTypes.oneOf([MODE.CREATE, MODE.EDIT, MODE.VIEW])
 }
 
 export default Parody

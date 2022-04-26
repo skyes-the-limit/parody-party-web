@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import * as Yup from 'yup'
@@ -38,21 +38,31 @@ const AccountForm = ({ handleSubmit }) => {
     >
       {({ errors, touched }) => (
         <Form>
-          <label htmlFor='username'>Username</label>
-          <Field name='username' />
-          {(errors.username && touched.username) &&
-            <div>{errors.username}</div>
-          }
+          <div className='form-group'>
+            <label htmlFor='exampleInputEmail1' className='form-label mt-4'>Username</label>
+            <Field name='username' className='form-control' />
+            {(errors.username && touched.username) &&
+              <small className='invalid-feedback'>
+                {errors.username}
+              </small>
+            }
+          </div>
 
-          <label htmlFor='password'>Password</label>
-          <Field type='password' name='password' />
-          {(errors.password && touched.password) &&
-            <div>{errors.password}</div>
-          }
+          <div className='form-group'>
+            <label htmlFor='exampleInputEmail1' className='form-label mt-4'>Password</label>
+            <Field name='password' className='form-control' />
+            {(errors.password && touched.password) &&
+              <small className='invalid-feedback'>
+                {errors.password}
+              </small>
+            }
+          </div>
 
           <button
             type='submit'
-            disabled={!Object.keys(errors).length === 0 && Object.keys(touched).length === 0}>
+            disabled={!Object.keys(errors).length === 0 && Object.keys(touched).length === 0}
+            className='btn btn-primary mt-4'
+          >
             Submit
           </button>
         </Form>
@@ -77,7 +87,14 @@ const SignupSchema = Yup.object().shape({
     .required('Required')
 })
 
+const MODE = {
+  LOGIN: 'LOGIN',
+  SIGNUP: 'SIGNUP'
+}
+
 const Login = () => {
+  const [mode, setMode] = useState(MODE.LOGIN)
+
   // If the user is already logged in, redirect to the profile page
   const user = useSelector(state => state.user)
   if (user) {
@@ -94,15 +111,43 @@ const Login = () => {
   }
 
   return (
-    <div>
-      <h1>Login Page</h1>
+    <div className='mt-4 d-flex justify-content-center'>
+      <div className='card border-primary mb-3' style={{ width: '30rem' }}>
+        <div className='card-header p-0'>
+          <div className='btn-group w-100' role='group' aria-label='Basic radio toggle button group'>
+            <input
+              type='radio'
+              className='btn-check'
+              name='btnradio'
+              id='loginToggle'
+              autoComplete='off'
+              checked={mode === MODE.LOGIN}
+              onChange={() => setMode(MODE.LOGIN)}
+            />
+            <label className='btn btn-outline-primary border-0' htmlFor='loginToggle'>Log In</label>
+            <input
+              type='radio'
+              className='btn-check'
+              name='btnradio'
+              id='signupToggle'
+              autoComplete='off'
+              checked={mode === MODE.SIGNUP}
+              onChange={() => setMode(MODE.SIGNUP)}
+            />
+            <label className='btn btn-outline-primary border-0' htmlFor='signupToggle'>Sign Up</label>
+          </div>
+        </div>
+        <div className='card-body pt-0'>
+          {mode === MODE.LOGIN && (
+            <AccountForm handleSubmit={submitLogin} />
+          )}
 
-      <h2>Login</h2>
-      <AccountForm handleSubmit={submitLogin} />
-
-      <h2>Create Account</h2>
-      <AccountForm handleSubmit={submitCreateAccount} />
-    </div>
+          {mode === MODE.SIGNUP && (
+            <AccountForm handleSubmit={submitCreateAccount} />
+          )}
+        </div>
+      </div>
+    </div >
   )
 }
 

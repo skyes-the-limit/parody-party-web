@@ -12,6 +12,7 @@ import Profile from './components/Profile/Profile'
 import Search from './components/Search/Search'
 import SearchResults from './components/Search/SearchResults'
 
+import 'bootswatch/dist/sandstone/bootstrap.min.css'
 import './App.css'
 
 const reducer = combineReducers({

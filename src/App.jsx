@@ -10,7 +10,6 @@ import Home from './components/Home/Home'
 import Login from './components/Login/Login'
 import Parody from './components/Parody/Parody'
 import Profile from './components/Profile/Profile'
-import Search from './components/Search/Search'
 import SearchResults from './components/Search/SearchResults'
 
 import 'bootswatch/dist/sandstone/bootstrap.min.css'
@@ -38,7 +37,6 @@ const App = () => {
               https://github.com/remix-run/react-router/issues/7285 */}
               <Route path='profile' element={<Profile />} />
               <Route path='profile/:username' element={<Profile />} />
-              <Route path='search' element={<Search />} />
               <Route path='search/:query' element={<SearchResults />} />
             </Route>
           </Routes>

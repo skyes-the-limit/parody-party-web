@@ -28,37 +28,32 @@ const SearchSchema = Yup.object().shape({
     .required('Required')
 })
 
-const Search = () => {
+const SearchForm = () => {
   return (
-    <div>
-      <h1>Search Page</h1>
+    <Formik
+      initialValues={{
+        query: ''
+      }}
+      validationSchema={SearchSchema}
+      onSubmit={(values) => {
+        location.href = `${location.origin}/search/${values.query}`
+      }}
+    >
+      {({ errors, touched }) => (
+        <Form className='d-flex me-auto'>
+          <Field name='query' className='form-control me-sm-2' />
 
-      <Formik
-        initialValues={{
-          query: ''
-        }}
-        validationSchema={SearchSchema}
-        onSubmit={(values) => {
-          location.href = `${location.href}/${values.query}`
-        }}
-      >
-        {({ errors, touched }) => (
-          <Form>
-            <Field name='query' />
-            {(errors.query && touched.query) &&
-              <div>{errors.query}</div>
-            }
-
-            <button
-              type='submit'
-              disabled={!Object.keys(errors).length === 0 && Object.keys(touched).length === 0}>
-              Search
-            </button>
-          </Form>
-        )}
-      </Formik>
-    </div>
+          <button
+            type='submit'
+            disabled={!Object.keys(errors).length === 0 && Object.keys(touched).length === 0}
+            className='btn btn-secondary my-2 my-sm-0'
+          >
+            Search
+          </button>
+        </Form>
+      )}
+    </Formik>
   )
 }
 
-export default Search
+export default SearchForm

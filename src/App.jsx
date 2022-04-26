@@ -1,10 +1,11 @@
 import React from 'react'
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { combineReducers, createStore } from 'redux'
 import { Provider } from 'react-redux'
 
 import usersReducer from './reducers/users-reducer'
 
+import Navigation from './components/Navigation/Navigation'
 import Home from './components/Home/Home'
 import Login from './components/Login/Login'
 import Parody from './components/Parody/Parody'
@@ -21,23 +22,12 @@ const reducer = combineReducers({
 
 const store = createStore(reducer)
 
-const Navigation = () => {
-  return (
-    <>
-      <Link to='/' className='d-block'>Home</Link>
-      <Link to='/login' className='d-block'>Login</Link>
-      <Link to='/profile' className='d-block'>Profile</Link>
-      <Link to='/search' className='d-block'>Search</Link>
-    </>
-  )
-}
-
 const App = () => {
   return (
     <Provider store={store}>
       <BrowserRouter>
+        <Navigation />
         <div className='container'>
-          <Navigation />
           <Routes>
             <Route path='/'>
               <Route index element={<Home />} />

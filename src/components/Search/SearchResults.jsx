@@ -7,10 +7,13 @@ import parodyService from '../../services/parody-service.js'
 import songShape from '../../definitions/song-shape.js'
 import parodyShape from '../../definitions/parody-shape.js'
 
-const ParodyPreview = ({ song, parody }) => {
+const ParodyPreview = ({ parody }) => {
   return (
     <li className='list-group-item list-group-item-action d-flex justify-content-between align-items-center'>
-      <Link to={`/details/${song.id}/${parody._id}`} style={{ textDecoration: 'none', color: '#3e3f3a' }}>
+      <Link
+        to={`/details/${parody.originalGeniusID}/${parody._id}`}
+        style={{ textDecoration: 'none', color: '#3e3f3a' }}
+      >
         {parody.title} by {parody.author}
       </Link>
       <span className='badge bg-primary rounded-pill'>{parody.likes} likes</span>
@@ -46,7 +49,7 @@ const Song = ({ song }) => {
       {results && results.length > 0 && (
         <ul className='list-group list-group-flush'>
           {results.map((parody, index) => (
-            <ParodyPreview song={song} parody={parody} key={`${song.full_title}-parody-${index}`} />
+            <ParodyPreview parody={parody} key={`${song.full_title}-parody-${index}`} />
           ))}
         </ul>
       )}
@@ -103,7 +106,6 @@ Song.propTypes = {
 }
 
 ParodyPreview.propTypes = {
-  song: songShape,
   parody: parodyShape
 }
 

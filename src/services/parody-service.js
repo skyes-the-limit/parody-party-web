@@ -12,6 +12,11 @@ const PARODY_API = `${API_BASE}/parody`
 // app.put(`${PARODY_API_BASE}/lyrics`, updateParodyLyrics)
 // app.delete(`${PARODY_API_BASE}/:id`, deleteParody)
 
+const findAllParodies = async () => {
+  const response = await axios.get(PARODY_API)
+  return response.data
+}
+
 const findParodyByOriginal = async (originalGeniusID) => {
   const response = await axios.get(`${PARODY_API}/original/${originalGeniusID}`)
   return response.data
@@ -28,6 +33,7 @@ const createParody = async (parody) => {
 }
 
 export default {
+  findAllParodies,
   findParodyByOriginal,
   findParodyById,
   createParody

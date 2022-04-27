@@ -1,4 +1,8 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+
+import parodyService from '../../services/parody-service.js'
+import parodyShape from '../../definitions/parody-shape.js'
 
 /*
 Home - this is the landing page of your web application. It is the first page users should see when they visit your
@@ -13,9 +17,52 @@ website. The home page must fulfill the following requirements.
 [ ] Must be clear to what the Web site is about and must look polished and finished
 */
 
-const Home = () => {
+const ParodyPreview = ({ parody }) => {
   return (
-    <h1>Home Page</h1>
+    <li className='list-group-item list-group-item-action d-flex justify-content-between align-items-center'>
+      <Link
+        to={`/details/${parody.originalGeniusID}/${parody._id}`}
+        style={{ textDecoration: 'none', color: '#3e3f3a' }}
+      >
+        {parody.title} by {parody.author}
+      </Link>
+      <span className='badge bg-primary rounded-pill'>{parody.likes} likes</span>
+    </li>
+  )
+}
+
+ParodyPreview.propTypes = {
+  parody: parodyShape
+}
+
+const Home = () => {
+  const [results, setResults] = useState(null)
+  const loggedInUser = null // TODO
+
+  useEffect(() => {
+    parodyService.findAllParodies().then((response) => { setResults(response) })
+  })
+
+  return (
+    <div className='mt-4'>
+      <h2>Top Parodies</h2>
+      <ul className='list-group'>
+        {results && results.map((parody, index) => (
+          <ParodyPreview parody={parody} key={`parody-${index}`} />
+        ))}
+      </ul>
+
+      {loggedInUser && (
+        <>
+          <h2>Your Parodies</h2>
+          <ul className='list-group'>
+            {results && results.map((parody, index) => (
+              <ParodyPreview parody={parody} key={`parody-${index}`} />
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
   )
 }
 

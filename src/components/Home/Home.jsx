@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 import parodyService from '../../services/parody-service.js'
+import authService from '../../services/auth-service.js'
 import parodyShape from '../../definitions/parody-shape.js'
 
 /*
@@ -36,31 +37,51 @@ ParodyPreview.propTypes = {
 }
 
 const Home = () => {
-  const [results, setResults] = useState(null)
-  const loggedInUser = null // TODO
+  const [topParodies, setTopParodies] = useState(null)
+  const [yourParodies, setYourParodies] = useState(null)
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
-    parodyService.findAllParodies().then((response) => { setResults(response) })
-  })
+    if (!user) {
+      authService.profile().then(response => {
+        setUser(response)
+      })
+    }
+  }, [user])
+
+  useEffect(() => {
+    if (user && !yourParodies) {
+      parodyService.findParodyByAuthor(user.username).then((response) => { setYourParodies(response || []) })
+    }
+  }, [user, yourParodies])
+
+  useEffect(() => {
+    parodyService.findAllParodies().then((response) => { setTopParodies(response) })
+  }, [topParodies])
 
   return (
     <div className='mt-4'>
       <h2>Top Parodies</h2>
       <ul className='list-group'>
-        {results && results.map((parody, index) => (
+        {topParodies && topParodies.map((parody, index) => (
           <ParodyPreview parody={parody} key={`parody-${index}`} />
         ))}
       </ul>
 
-      {loggedInUser && (
-        <>
+      {user && (
+        <div className='mt-4'>
           <h2>Your Parodies</h2>
-          <ul className='list-group'>
-            {results && results.map((parody, index) => (
-              <ParodyPreview parody={parody} key={`parody-${index}`} />
-            ))}
-          </ul>
-        </>
+          {yourParodies && yourParodies.length === 0 && (
+            <p>It looks like you haven&apos;t written any parodies yet!</p>
+          )}
+          {yourParodies && yourParodies.length > 0 && (
+            <ul className='list-group'>
+              {yourParodies && yourParodies.map((parody, index) => (
+                <ParodyPreview parody={parody} key={`parody-${index}`} />
+              ))}
+            </ul>
+          )}
+        </div>
       )}
     </div>
   )

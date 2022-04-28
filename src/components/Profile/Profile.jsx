@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { findByUsername } from '../../actions/users-actions'
+
+import usersService from '../../services/users-service'
+import authService from '../../services/auth-service'
 
 /*
 The profile page where users can see all the information about themselves and other users. It could have several
@@ -32,19 +33,22 @@ their profile
 
 const Profile = () => {
   const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState(null)
   const { username } = useParams()
-  const dispatch = useDispatch()
 
-  const getLoggedInUser = () => useSelector(state => state.user)
-  const getUserFromParams = () => findByUsername(dispatch, username)
-
-  // TODO: Breaks rules of hooks: https://reactjs.org/link/rules-of-hooks
-  // /profile/:username does not rerender after Promise has resolved
-  const user = useMemo(() => {
-    const user = username ? getUserFromParams() : getLoggedInUser()
-    Promise.resolve(user).then(setLoading(false))
-    return user
-  }, [username])
+  useEffect(() => {
+    if (username) {
+      usersService.findUserByUsername(username).then(response => {
+        setUser(response)
+        setLoading(false)
+      })
+    } else {
+      authService.profile().then(response => {
+        setUser(response)
+        setLoading(false)
+      })
+    }
+  })
 
   if (loading) {
     return (

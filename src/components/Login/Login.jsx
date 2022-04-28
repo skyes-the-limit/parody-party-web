@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import * as Yup from 'yup'
 import { Field, Form, Formik } from 'formik'
-import { useDispatch, useSelector } from 'react-redux'
 
-import { login, createAccount } from '../../actions/users-actions'
+import { signUp, signIn, profile } from '../../services/auth-service'
 
 /*
 The login and register page allow users to register with the web site and then login later on
@@ -106,21 +105,31 @@ const SignupSchema = Yup.object().shape({
 })
 
 const Login = () => {
+  const [user, setUser] = useState(null)
   const [mode, setMode] = useState(MODE.LOGIN)
 
+  useEffect(() => {
+    profile().then(response => {
+      console.log(response)
+      setUser(response)
+    })
+  })
+
   // If the user is already logged in, redirect to the profile page
-  const user = useSelector(state => state.user)
   if (user) {
     return <Navigate replace to='/profile' />
   }
 
-  const dispatch = useDispatch()
   const submitLogin = (values) => {
-    login(dispatch, values.username, values.password)
+    signIn(values.username, values.password).then(response => {
+      setUser(response)
+    })
   }
 
   const submitCreateAccount = (values) => {
-    createAccount(dispatch, values.username, values.password)
+    signUp(values.username, values.password).then(response => {
+      setUser(response)
+    })
   }
 
   return (

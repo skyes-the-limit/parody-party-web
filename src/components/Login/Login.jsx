@@ -162,7 +162,7 @@ const Login = () => {
 
   return (
     <div className='mt-4 d-flex justify-content-center'>
-      <div className='card border-primary mb-3' style={{ width: '32em' }}>
+      <div className='card border-primary mb-3' style={{ width: '100%', maxWidth: '32em' }}>
         <div className='card-header p-0'>
           <div className='btn-group w-100' role='group' aria-label='Basic radio toggle button group'>
             <input

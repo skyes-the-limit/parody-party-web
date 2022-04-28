@@ -56,7 +56,7 @@ const Parody = ({ initialMode = MODE.VIEW }) => {
   }
 
   return (
-    <div className='mt-4 mx-auto' style={{ width: '48em' }}>
+    <div className='mt-4 mx-auto' style={{ maxWidth: '48em' }}>
       <h5>Original:</h5>
       <h6>
         <a

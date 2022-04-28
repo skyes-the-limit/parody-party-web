@@ -39,12 +39,18 @@ ParodyPreview.propTypes = {
 const Home = () => {
   const [topParodies, setTopParodies] = useState(null)
   const [yourParodies, setYourParodies] = useState(null)
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(undefined)
 
   useEffect(() => {
-    if (!user) {
+    if (user === undefined) {
       authService.profile().then(response => {
         setUser(response)
+      }).catch((error) => {
+        if (error.response.status === 503) {
+          setUser(null)
+        } else {
+          throw error
+        }
       })
     }
   }, [user])

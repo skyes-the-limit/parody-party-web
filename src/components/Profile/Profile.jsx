@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 
 import usersService from '../../services/users-service'
 import authService from '../../services/auth-service'
@@ -34,21 +34,41 @@ their profile
 const Profile = () => {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
-  const { username } = useParams()
+  const { username } = useParams() || null
 
   useEffect(() => {
     if (username) {
       usersService.findUserByUsername(username).then(response => {
         setUser(response)
         setLoading(false)
+      }).catch((error) => {
+        if (error.response.status === 404) {
+          setUser(null)
+          setLoading(false)
+        } else {
+          throw error
+        }
       })
     } else {
       authService.profile().then(response => {
         setUser(response)
         setLoading(false)
+      }).catch((error) => {
+        if (error.response.status === 503) {
+          setUser(null)
+          setLoading(false)
+        } else {
+          throw error
+        }
       })
     }
   })
+
+  const logout = () => {
+    authService.logout().then((response) => {
+      console.log(response)
+    })
+  }
 
   if (loading) {
     return (
@@ -66,8 +86,7 @@ const Profile = () => {
   // /profile and not logged in
   if (!username && !loading && !user) {
     return (
-      <div>Not logged in.</div>
-      // <Navigate replace to='/login' />
+      <Navigate replace to='/login' />
     )
   }
 
@@ -76,6 +95,7 @@ const Profile = () => {
       <h1>Profile Page</h1>
       <h2>{username ? '' : 'Welcome, '}{user.username}</h2>
       <h2>Role: {user.role}</h2>
+      <button type='button' className='btn btn-dark' onClick={logout}>Logout</button>
     </div>
   )
 }

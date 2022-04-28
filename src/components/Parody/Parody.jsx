@@ -34,6 +34,13 @@ const Parody = ({ initialMode = MODE.VIEW }) => {
   useEffect(() => {
     authService.profile().then(response => {
       setUser(response)
+    }).catch((error) => {
+      // TODO: Caught "error" HTTP status still logs to console
+      if (error.response.status === 503) {
+        setUser(null)
+      } else {
+        throw error
+      }
     })
   })
 

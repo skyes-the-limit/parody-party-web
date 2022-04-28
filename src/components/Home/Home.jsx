@@ -10,12 +10,12 @@ Home - this is the landing page of your web application. It is the first page us
 website. The home page must fulfill the following requirements.
 [X] Must be mapped to either the root context ("/") or ("/home").
 [X] Must be the first page when visiting the website
-[ ] Must display generic content for anonymous users. The content must be dynamic based on the latest data. For
+[X] Must display generic content for anonymous users. The content must be dynamic based on the latest data. For
     instance, you might display snippets and links to the most recent post, review, or member who recently joined
-[ ] Must display specific content for the logged in user. The content must be dynamic based on the most recent data
+[X] Must display specific content for the logged in user. The content must be dynamic based on the most recent data
     entered by the logged in user. For instance, you might display snippets and links to the most recent post or review
     created by the logged in user
-[ ] Must be clear to what the Web site is about and must look polished and finished
+[X] Must be clear to what the Web site is about and must look polished and finished
 */
 
 const ParodyPreview = ({ parody }) => {
@@ -46,6 +46,7 @@ const Home = () => {
       authService.profile().then(response => {
         setUser(response)
       }).catch((error) => {
+        // TODO: Caught "error" HTTP status still logs to console
         if (error.response.status === 503) {
           setUser(null)
         } else {
@@ -67,6 +68,11 @@ const Home = () => {
 
   return (
     <div className='mt-4'>
+      <div className='text-center mb-5'>
+        <h1>Welcome to Parody Party</h1>
+        <p className='lead text-muted'>Your go-to portal for popular parodies of songs</p>
+      </div>
+
       <h2>Top Parodies</h2>
       <ul className='list-group'>
         {topParodies && topParodies.map((parody, index) => (

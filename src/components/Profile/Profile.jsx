@@ -55,6 +55,7 @@ const Profile = () => {
         setLoading(false)
       }).catch((error) => {
         if (error.response.status === 503) {
+          // TODO: Caught "error" HTTP status still logs to console
           setUser(null)
           setLoading(false)
         } else {

@@ -24,6 +24,7 @@ const CreateOrEditParodyForm = ({ original, parody, mode, setMode }) => {
         setUser(response)
       }).catch((error) => {
         if (error.response.status === 503) {
+          // TODO: Caught "error" HTTP status still logs to console
           setUser(null)
         } else {
           throw error

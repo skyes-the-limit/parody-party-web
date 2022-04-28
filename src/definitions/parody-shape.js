@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 const parodyShape = PropTypes.shape({
   author: PropTypes.string,
   comments: PropTypes.array,
-  date: PropTypes.date,
+  date: PropTypes.string,
   likes: PropTypes.number,
   lyrics: PropTypes.string,
   originalGeniusID: PropTypes.number,

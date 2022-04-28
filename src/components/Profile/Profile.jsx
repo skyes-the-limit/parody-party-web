@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
-import { findByUsername } from '../../actions/users-actions'
+import React, { useEffect, useState } from 'react'
+import { Navigate, useParams } from 'react-router-dom'
+
+import usersService from '../../services/users-service'
+import authService from '../../services/auth-service'
 
 /*
 The profile page where users can see all the information about themselves and other users. It could have several
@@ -32,19 +33,43 @@ their profile
 
 const Profile = () => {
   const [loading, setLoading] = useState(true)
-  const { username } = useParams()
-  const dispatch = useDispatch()
+  const [user, setUser] = useState(null)
+  const { username } = useParams() || null
 
-  const getLoggedInUser = () => useSelector(state => state.user)
-  const getUserFromParams = () => findByUsername(dispatch, username)
+  useEffect(() => {
+    if (username) {
+      usersService.findUserByUsername(username).then(response => {
+        setUser(response)
+        setLoading(false)
+      }).catch((error) => {
+        if (error.response.status === 404) {
+          setUser(null)
+          setLoading(false)
+        } else {
+          throw error
+        }
+      })
+    } else {
+      authService.profile().then(response => {
+        setUser(response)
+        setLoading(false)
+      }).catch((error) => {
+        if (error.response.status === 503) {
+          // TODO: Caught "error" HTTP status still logs to console
+          setUser(null)
+          setLoading(false)
+        } else {
+          throw error
+        }
+      })
+    }
+  })
 
-  // TODO: Breaks rules of hooks: https://reactjs.org/link/rules-of-hooks
-  // /profile/:username does not rerender after Promise has resolved
-  const user = useMemo(() => {
-    const user = username ? getUserFromParams() : getLoggedInUser()
-    Promise.resolve(user).then(setLoading(false))
-    return user
-  }, [username])
+  const logout = () => {
+    authService.logout().then((response) => {
+      console.log(response)
+    })
+  }
 
   if (loading) {
     return (
@@ -62,8 +87,7 @@ const Profile = () => {
   // /profile and not logged in
   if (!username && !loading && !user) {
     return (
-      <div>Not logged in.</div>
-      // <Navigate replace to='/login' />
+      <Navigate replace to='/login' />
     )
   }
 
@@ -72,6 +96,7 @@ const Profile = () => {
       <h1>Profile Page</h1>
       <h2>{username ? '' : 'Welcome, '}{user.username}</h2>
       <h2>Role: {user.role}</h2>
+      <button type='button' className='btn btn-dark' onClick={logout}>Logout</button>
     </div>
   )
 }

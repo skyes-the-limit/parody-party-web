@@ -27,6 +27,11 @@ const findParodyById = async (parodyId) => {
   return response.data
 }
 
+const findParodyByAuthor = async (authorUsername) => {
+  const response = await axios.get(`${PARODY_API}/author/${authorUsername}`)
+  return response.data
+}
+
 const createParody = async (parody) => {
   const response = await axios.post(PARODY_API, parody)
   return response.data
@@ -36,5 +41,6 @@ export default {
   findAllParodies,
   findParodyByOriginal,
   findParodyById,
+  findParodyByAuthor,
   createParody
 }

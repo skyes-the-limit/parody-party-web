@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import * as Yup from 'yup'
 import { Field, Form, Formik } from 'formik'
-import { useDispatch, useSelector } from 'react-redux'
+import cx from 'classnames'
 
-import { login, createAccount } from '../../actions/users-actions'
+import { signUp, signIn, profile } from '../../services/auth-service'
 
 /*
 The login and register page allow users to register with the web site and then login later on
@@ -44,34 +44,47 @@ const AccountForm = ({ handleSubmit, mode }) => {
       {({ errors, touched }) => (
         <Form>
           {mode === MODE.SIGNUP && (
-            <div className='form-group'>
+            <div className={cx('form-group', (errors.displayName && touched.displayName) ? 'has-danger' : '')}>
               <label htmlFor='displayName' className='form-label mt-4'>Display Name</label>
-              <Field name='displayName' className='form-control' />
+              <Field
+                name='displayName'
+                id='displayNameField'
+                className={cx('form-control', (errors.displayName && touched.displayName) ? 'is-invalid' : '')}
+              />
               {(errors.displayName && touched.displayName) &&
-                <small className='invalid-feedback'>
+                <div className='invalid-feedback'>
                   {errors.displayName}
-                </small>
+                </div>
               }
             </div>
           )}
 
-          <div className='form-group'>
+          <div className={cx('form-group', (errors.username && touched.username) ? 'has-danger' : '')}>
             <label htmlFor='username' className='form-label mt-4'>Username</label>
-            <Field name='username' id="usernameField" className='form-control' />
+            <Field
+              name='username'
+              id='usernameField'
+              className={cx('form-control', (errors.username && touched.username) ? 'is-invalid' : '')}
+            />
             {(errors.username && touched.username) &&
-              <small className='invalid-feedback'>
+              <div className='invalid-feedback'>
                 {errors.username}
-              </small>
+              </div>
             }
           </div>
 
-          <div className='form-group'>
+          <div className={cx('form-group', (errors.password && touched.password) ? 'has-danger' : '')}>
             <label htmlFor='password' className='form-label mt-4'>Password</label>
-            <Field type='password' name='password' id="passwordField" className='form-control' />
+            <Field
+              name='password'
+              id='passwordField'
+              type='password'
+              className={cx('form-control', (errors.password && touched.password) ? 'is-invalid' : '')}
+            />
             {(errors.password && touched.password) &&
-              <small className='invalid-feedback'>
+              <div className='invalid-feedback'>
                 {errors.password}
-              </small>
+              </div>
             }
           </div>
 
@@ -106,26 +119,50 @@ const SignupSchema = Yup.object().shape({
 })
 
 const Login = () => {
+  const [user, setUser] = useState(undefined)
   const [mode, setMode] = useState(MODE.LOGIN)
+  const [submitError, setSubmitError] = useState(null)
+
+  useEffect(() => {
+    if (user === undefined) {
+      profile().then(response => {
+        setUser(response)
+      }).catch((error) => {
+        if (error.response.status === 503) {
+          setUser(null)
+        } else {
+          throw error
+        }
+      })
+    }
+  })
 
   // If the user is already logged in, redirect to the profile page
-  const user = useSelector(state => state.user)
   if (user) {
     return <Navigate replace to='/profile' />
   }
 
-  const dispatch = useDispatch()
   const submitLogin = (values) => {
-    login(dispatch, values.username, values.password)
+    signIn(values.username, values.password).then(response => {
+      setUser(response)
+    })
   }
 
   const submitCreateAccount = (values) => {
-    createAccount(dispatch, values.username, values.password)
+    signUp(values.username, values.password).then(response => {
+      setUser(response)
+    }).catch((error) => {
+      if (error.response.status === 403) {
+        setSubmitError('Username taken')
+      } else {
+        throw error
+      }
+    })
   }
 
   return (
     <div className='mt-4 d-flex justify-content-center'>
-      <div className='card border-primary mb-3' style={{ width: '32em' }}>
+      <div className='card border-primary mb-3' style={{ width: '100%', maxWidth: '32em' }}>
         <div className='card-header p-0'>
           <div className='btn-group w-100' role='group' aria-label='Basic radio toggle button group'>
             <input
@@ -150,13 +187,19 @@ const Login = () => {
             <label className='btn btn-outline-primary border-0' htmlFor='signupToggle'>Sign Up</label>
           </div>
         </div>
-        <div className='card-body pt-0'>
+        <div className='card-body pt-0' style={{ marginBottom: !submitError ? '25px' : '0' }}>
           {mode === MODE.LOGIN && (
             <AccountForm handleSubmit={submitLogin} mode={MODE.LOGIN} />
           )}
 
           {mode === MODE.SIGNUP && (
             <AccountForm handleSubmit={submitCreateAccount} mode={MODE.SIGNUP} />
+          )}
+
+          {submitError && (
+            <div className='d-block invalid-feedback'>
+              {submitError}
+            </div>
           )}
         </div>
       </div>

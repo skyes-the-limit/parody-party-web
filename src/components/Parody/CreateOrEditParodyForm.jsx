@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import * as Yup from 'yup'
 import { Field, Form, Formik } from 'formik'
-import { useSelector } from 'react-redux'
 
 import parodyService from '../../services/parody-service.js'
+import authService from '../../services/auth-service.js'
 import parodyShape from '../../definitions/parody-shape.js'
 import songShape from '../../definitions/song-shape.js'
 import MODE from '../../definitions/parody-mode.js'
+import { Navigate } from 'react-router-dom'
 
 const CreateParodySchema = Yup.object().shape({
   title: Yup.string().required('Required'),
@@ -15,9 +16,27 @@ const CreateParodySchema = Yup.object().shape({
 })
 
 const CreateOrEditParodyForm = ({ original, parody, mode, setMode }) => {
-  const loggedInUser = useSelector(state => state.user)
-  console.log('loggedInUser')
-  console.log(loggedInUser)
+  const [user, setUser] = useState(undefined)
+
+  useEffect(() => {
+    if (user === undefined) {
+      authService.profile().then(response => {
+        setUser(response)
+      }).catch((error) => {
+        if (error.response.status === 503) {
+          // TODO: Caught "error" HTTP status still logs to console
+          setUser(null)
+        } else {
+          throw error
+        }
+      })
+    }
+  }, [user])
+
+  if (user === null) {
+    // TODO: somehow include error message to display?
+    return <Navigate replace to='/login' />
+  }
 
   const submitCreateParody = (values) => {
     const parody = {

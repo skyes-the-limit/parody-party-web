@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 
 import parodyService from '../../services/parody-service.js'
 import geniusService from '../../services/genius-service.js'
+import authService from '../../services/auth-service.js'
 import MODE from '../../definitions/parody-mode.js'
 import CreateOrEditParodyForm from './CreateOrEditParodyForm.jsx'
 
@@ -24,10 +25,24 @@ on the search result. The details page must fulfill the following requirements.
 */
 
 const Parody = ({ initialMode = MODE.VIEW }) => {
+  const [user, setUser] = useState(false)
   const [mode, setMode] = useState(initialMode)
   const [original, setOriginal] = useState(null)
   const [parody, setParody] = useState(null)
   const { originalId, parodyId } = useParams()
+
+  useEffect(() => {
+    authService.profile().then(response => {
+      setUser(response)
+    }).catch((error) => {
+      // TODO: Caught "error" HTTP status still logs to console
+      if (error.response.status === 503) {
+        setUser(null)
+      } else {
+        throw error
+      }
+    })
+  })
 
   useEffect(() => {
     if (!original) {
@@ -46,11 +61,9 @@ const Parody = ({ initialMode = MODE.VIEW }) => {
       <div>Loading...</div>
     )
   }
-  console.log(parody)
-  console.log(original)
 
   return (
-    <div className='mt-4 mx-auto' style={{ width: '48em' }}>
+    <div className='mt-4 mx-auto' style={{ maxWidth: '48em' }}>
       <h5>Original:</h5>
       <h6>
         <a
@@ -65,7 +78,9 @@ const Parody = ({ initialMode = MODE.VIEW }) => {
       {parody && mode === MODE.VIEW && (
         <div>
           <h5>Parody:
-            <button type='button' className='btn btn-dark' onClick={() => setMode(MODE.EDIT)}>Edit</button>
+            {user && user.username === parody.author && (
+              <button type='button' className='btn btn-dark' onClick={() => setMode(MODE.EDIT)}>Edit</button>
+            )}
           </h5>
           <h6>{parody.title} by {parody.author}</h6>
           <div style={{ whiteSpace: 'pre-wrap' }}>{parody.lyrics}</div>

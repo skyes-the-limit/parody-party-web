@@ -80,14 +80,14 @@ const SearchResults = () => {
 
   if (!results) {
     return (
-      <div className='mt-4 mx-auto' style={{ width: '48em' }}>
+      <div className='mt-4 mx-auto' style={{ maxWidth: '48em' }}>
         <h1>Loading...</h1>
       </div>
     )
   }
 
   return (
-    <div className='mt-4 mx-auto' style={{ width: '48em' }}>
+    <div className='mt-4 mx-auto' style={{ maxWidth: '48em' }}>
       <h1 className='mb-4'>
         Results for &quot;{query}&quot;
       </h1>

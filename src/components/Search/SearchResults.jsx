@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-// import { useSelector } from 'react-redux'
 
 import searchService from '../../services/genius-service.js'
 import parodyService from '../../services/parody-service.js'
@@ -23,10 +22,6 @@ const ParodyPreview = ({ parody }) => {
 
 const Song = ({ song }) => {
   const [results, setResults] = useState(null)
-  // const loggedInUser = useSelector(state => state.user)
-  // console.log('loggedInUser')
-  // console.log(loggedInUser)
-  console.log(song)
 
   useEffect(() => {
     parodyService.findParodyByOriginal(song.id).then((response) => { setResults(response) })

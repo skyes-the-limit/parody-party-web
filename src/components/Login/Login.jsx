@@ -5,7 +5,7 @@ import * as Yup from 'yup'
 import { Field, Form, Formik } from 'formik'
 import cx from 'classnames'
 
-import { signUp, signIn, profile } from '../../services/auth-service'
+import { signUp, logIn, profile } from '../../services/auth-service'
 
 /*
 The login and register page allow users to register with the web site and then login later on
@@ -135,7 +135,7 @@ const Login = () => {
         }
       })
     }
-  })
+  }, [user])
 
   // If the user is already logged in, redirect to the profile page
   if (user) {
@@ -143,8 +143,14 @@ const Login = () => {
   }
 
   const submitLogin = (values) => {
-    signIn(values.username, values.password).then(response => {
+    logIn(values.username, values.password).then(response => {
       setUser(response)
+    }).catch((error) => {
+      if (error.response.status === 403) {
+        setSubmitError('Invalid username / password')
+      } else {
+        throw error
+      }
     })
   }
 

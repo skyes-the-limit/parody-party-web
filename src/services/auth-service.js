@@ -10,12 +10,8 @@ export const signUp = async (username, password) => {
   return response.data
 }
 
-export const signIn = async (username, password) => {
-  console.log(`url: ${AUTH_API}/signup`)
-  console.log(username)
-  console.log(password)
-  const response = await api.post(`${AUTH_API}/signin`, { username, password })
-  console.log(response)
+export const logIn = async (username, password) => {
+  const response = await api.post(`${AUTH_API}/login`, { username, password })
   return response.data
 }
 
@@ -31,7 +27,7 @@ export const logout = async () => {
 
 export default {
   signUp,
-  signIn,
+  logIn,
   profile,
   logout
 }

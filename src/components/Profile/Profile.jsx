@@ -65,12 +65,6 @@ const Profile = () => {
     }
   })
 
-  const logout = () => {
-    authService.logout().then((response) => {
-      console.log(response)
-    })
-  }
-
   if (loading) {
     return (
       <div>Loading...</div>
@@ -96,8 +90,8 @@ const Profile = () => {
       <h1>Profile Page</h1>
       <h2>{username ? '' : 'Welcome, '}{user.username}</h2>
       <h2>Role: {user.role}</h2>
-      <button type='button' className='btn btn-dark' onClick={logout}>Logout</button>
-    </div>
+      <button type='button' className='btn btn-dark' onClick={() => authService.logout()}>Logout</button>
+    </div >
   )
 }
 

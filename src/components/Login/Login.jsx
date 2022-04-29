@@ -13,10 +13,10 @@ The login and register page allow users to register with the web site and then l
 [X] Must allow choosing a role(s) for a user. For instance, when signing up you can provide a checkbox or radio button
     to select the role or roles. Alternatively provide an admin role and admin page that allows configuring user role(s)
 [X] Must allow login in and identifying themselves
-[ ] Must disallow access to at least one Web page unless logged in
-[ ] Must allow access to all other Web pages even when not logged in
-[ ] Must adapt content based on whether user is logged in or not for at least the Home page and Profile page
-[ ] Must force login only when identity is required. For instance, an anonymous user might search for movies and visit
+[X] Must disallow access to at least one Web page unless logged in
+[X] Must allow access to all other Web pages even when not logged in
+[X] Must adapt content based on whether user is logged in or not for at least the Home page and Profile page
+[X] Must force login only when identity is required. For instance, an anonymous user might search for movies and visit
     the details page for a particular movie without needing to login. But if they attempt to like the movie, or rate it,
     or comment on it, or write a review, or follow someone, the application must request the user to login. Most of the
     Web application must be available without login (see me if not)

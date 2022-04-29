@@ -1,8 +1,12 @@
+/* eslint-disable max-len */
 import React, { useEffect, useState } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
 
 import usersService from '../../services/users-service'
 import authService from '../../services/auth-service'
+import ProfileInfoForm from './ProfileInfoForm'
+import ParodyList from '../ParodyList/ParodyList'
+import LikesList from './LikesList'
 
 /*
 The profile page where users can see all the information about themselves and other users. It could have several
@@ -13,11 +17,11 @@ their profile
 [ ] Must allow users to change their personal information. If a user is logged in then they can see their profile
     including sensitive information such as email and phone
 [X] Must be accessible to other users including anonymous users
-[ ] Must hide personal/private information from others visiting the profile. If a user is visiting someone else's
+[X] Must hide personal/private information from others visiting the profile. If a user is visiting someone else's
     profile, then they can't see that other user's sensitive information
-[X] Must be mapped to "/profile" for displaying the profile of the currently logged in user
-[X] Must be mapped to "/profile/{profileId}" for displaying someone elses profile
-[ ] Must group similar/related data into distinguishable groups, e.g., Following, Followers, Review, Favorites, etc.
+[X] Must be mapped to '/profile' for displaying the profile of the currently logged in user
+[X] Must be mapped to '/profile/{profileId}' for displaying someone elses profile
+[X] Must group similar/related data into distinguishable groups, e.g., Following, Followers, Review, Favorites, etc.
 
 [ ] Must display lists of snippets and links of all data related to a user. For instance, display a list of links to all
     the favorite movies, list of links of users they are following, etc. For instance:
@@ -33,37 +37,45 @@ their profile
 
 const Profile = () => {
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(undefined)
   const { username } = useParams() || null
 
   useEffect(() => {
-    if (username) {
-      usersService.findUserByUsername(username).then(response => {
-        setUser(response)
-        setLoading(false)
-      }).catch((error) => {
-        if (error.response.status === 404) {
-          setUser(null)
+    if (user === undefined) {
+      if (username) {
+        usersService.findUserByUsername(username).then(response => {
+          setUser(response)
           setLoading(false)
-        } else {
-          throw error
-        }
-      })
-    } else {
-      authService.profile().then(response => {
-        setUser(response)
-        setLoading(false)
-      }).catch((error) => {
-        if (error.response.status === 503) {
-          // TODO: Caught "error" HTTP status still logs to console
-          setUser(null)
+        }).catch((error) => {
+          if (error.response.status === 404) {
+            setUser(null)
+            setLoading(false)
+          } else {
+            throw error
+          }
+        })
+      } else {
+        authService.profile().then(response => {
+          setUser(response)
           setLoading(false)
-        } else {
-          throw error
-        }
-      })
+        }).catch((error) => {
+          if (error.response.status === 503) {
+            // TODO: Caught 'error' HTTP status still logs to console
+            setUser(null)
+            setLoading(false)
+          } else {
+            throw error
+          }
+        })
+      }
     }
   })
+
+  const logout = () => {
+    authService.logout().then(() => {
+      location.href = location.origin
+    })
+  }
 
   if (loading) {
     return (
@@ -86,12 +98,35 @@ const Profile = () => {
   }
 
   return (
-    <div>
-      <h1>Profile Page</h1>
-      <h2>{username ? '' : 'Welcome, '}{user.username}</h2>
-      <h2>Role: {user.role}</h2>
-      <button type='button' className='btn btn-dark' onClick={() => authService.logout()}>Logout</button>
-    </div >
+    <>
+      {username && user && (
+        <div className='mt-4'>
+          <h1>{user.displayName || user.username}&#39;s Profile</h1>
+          <ParodyList user={user} yours={false} />
+          <LikesList user={user} yours={false} />
+        </div>
+      )}
+
+      {!username && user && (
+        <div>
+          <div className='row'>
+            <div className='d-flex align-items-center justify-content-between mt-4'>
+              <h1 className='d-inline m-0'>Hello {user.displayName || user.username}</h1>
+              <button type='button' className='btn btn-dark' onClick={logout}>Logout</button>
+            </div>
+          </div>
+          <div className='row mt-4'>
+            <div className='col'>
+              <ProfileInfoForm user={user} />
+            </div>
+            <div className='col'>
+              <ParodyList user={user} yours={true} />
+              <LikesList user={user} yours={true} />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 

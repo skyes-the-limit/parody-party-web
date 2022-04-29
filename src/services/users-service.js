@@ -29,10 +29,22 @@ const grantAdminRole = async (username) => {
   return response.data
 }
 
+const updateDisplayName = async (displayName) => {
+  const response = await axios.post(`${USERS_API}/displayName/`, { displayName })
+  return response.data
+}
+
+const updatePassword = async (password) => {
+  const response = await axios.post(`${USERS_API}/password/`, { password })
+  return response.data
+}
+
 export default {
   findUserByUsername,
   login,
   createAccount,
   grantCreatorRole,
-  grantAdminRole
+  grantAdminRole,
+  updateDisplayName,
+  updatePassword
 }

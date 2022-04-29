@@ -33,11 +33,17 @@ const updateParody = async (parody) => {
   return response.data
 }
 
+const deleteParody = async (parodyId) => {
+  const response = await axios.delete(`${PARODY_API}/${parodyId}`)
+  return response.data
+}
+
 export default {
   findAllParodies,
   findParodyByOriginal,
   findParodyById,
   findParodyByAuthor,
   createParody,
-  updateParody
+  updateParody,
+  deleteParody
 }

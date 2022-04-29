@@ -62,6 +62,19 @@ const Parody = ({ initialMode = MODE.VIEW }) => {
     }
   }, [mode, parody, parodyId])
 
+  const likeParody = () => {
+    authService.likeParody(parody._id).then(() => {
+      setUser(undefined)
+      setParody(undefined)
+    })
+  }
+
+  const deleteParody = () => {
+    parodyService.deleteParody(parody._id).then(() => {
+      location.href = `${location.origin}`
+    })
+  }
+
   if (!original || (!parody && mode !== MODE.CREATE)) {
     return (
       <div>Loading...</div>
@@ -95,11 +108,7 @@ const Parody = ({ initialMode = MODE.VIEW }) => {
               <button type='button' className='btn btn-dark' onClick={() => setMode(MODE.EDIT)}>Edit</button>
             )}
             {user && user.username !== parody.author && (
-              <button type='button' className='btn btn-dark' onClick={() => {
-                authService.likeParody(parody._id)
-                setUser(undefined)
-                setParody(undefined)
-              }}>
+              <button type='button' className='btn btn-dark' onClick={likeParody}>
                 {/* TODO: Copy properly switches from "Like" to "Liked" but not back for some reason */}
                 {user.likes.includes(parodyId) ? 'Liked' : 'Like'}
               </button>
@@ -108,7 +117,11 @@ const Parody = ({ initialMode = MODE.VIEW }) => {
 
           <div style={{ whiteSpace: 'pre-wrap' }}>{parody.lyrics}</div>
 
+          {/* app.delete(`${PARODY_API_BASE}/:id`, deleteParody) */}
           <div className='my-4'>
+            {user && user.username === parody.author && (
+              <button type='button' className='btn btn-danger me-4' onClick={deleteParody}>Delete</button>
+            )}
             <span className='badge bg-primary rounded-pill'>{parody.likes} likes</span>
           </div>
         </>
@@ -124,6 +137,7 @@ const Parody = ({ initialMode = MODE.VIEW }) => {
         />
       )}
     </div>
+
   )
 }
 

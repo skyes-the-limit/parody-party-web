@@ -25,9 +25,15 @@ export const logout = async () => {
   return response.data
 }
 
+const likeParody = async (parodyId) => {
+  const response = await api.post(`${AUTH_API}/like/${parodyId}`)
+  return response.data
+}
+
 export default {
   signUp,
   logIn,
   profile,
-  logout
+  logout,
+  likeParody
 }

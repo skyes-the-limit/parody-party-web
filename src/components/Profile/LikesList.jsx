@@ -25,11 +25,18 @@ ParodyPreview.propTypes = {
 }
 
 const LikesList = ({ user, yours }) => {
-  const [likedParodies, setLikedParodies] = useState(null)
+  const [likedParodies, setLikedParodies] = useState(undefined)
 
   useEffect(() => {
-    if (user && !likedParodies) {
-      parodyService.findLikedParodies(user.username).then((response) => { setLikedParodies(response || []) })
+    if (likedParodies === undefined) {
+      const foundParodies = []
+      user.likes.forEach(parodyId => {
+        parodyService.findParodyById(parodyId).then(response => {
+          foundParodies.push(response)
+          setLikedParodies(foundParodies)
+        })
+      })
+      setLikedParodies(foundParodies)
     }
   }, [user, likedParodies])
 
@@ -51,7 +58,7 @@ const LikesList = ({ user, yours }) => {
 }
 
 LikesList.propTypes = {
-  user: userShape,
+  user: userShape.isRequired,
   yours: PropTypes.bool
 }
 

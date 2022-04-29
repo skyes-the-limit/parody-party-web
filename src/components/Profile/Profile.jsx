@@ -111,7 +111,7 @@ const Profile = () => {
         <div>
           <div className='row'>
             <div className='d-flex align-items-center justify-content-between mt-4'>
-              <h1 className='d-inline m-0'>Hello {user.displayName || user.username}</h1>
+              <h1 className='d-inline m-0'>Hello, {user.displayName || user.username}</h1>
               <button type='button' className='btn btn-dark' onClick={logout}>Logout</button>
             </div>
           </div>

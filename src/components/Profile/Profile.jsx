@@ -7,6 +7,7 @@ import authService from '../../services/auth-service'
 import ProfileInfoForm from './ProfileInfoForm'
 import ParodyList from '../ParodyList/ParodyList'
 import LikesList from './LikesList'
+import VerifyUsers from './VerifyUsers'
 
 /*
 The profile page where users can see all the information about themselves and other users. It could have several
@@ -122,6 +123,9 @@ const Profile = () => {
             <div className='col-md'>
               <ParodyList user={user} yours={true} />
               <LikesList user={user} yours={true} />
+              {user.role === 'admin' && (
+                <VerifyUsers />
+              )}
             </div>
           </div>
         </div>

@@ -118,6 +118,7 @@ const Parody = ({ initialMode = MODE.VIEW }) => {
         <CreateOrEditParodyForm
           original={original}
           parody={mode === MODE.EDIT ? parody : null}
+          setParody={setParody}
           mode={mode}
           setMode={setMode}
         />

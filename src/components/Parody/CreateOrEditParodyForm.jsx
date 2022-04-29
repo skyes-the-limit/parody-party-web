@@ -15,7 +15,7 @@ const CreateParodySchema = Yup.object().shape({
   lyrics: Yup.string().required('Required')
 })
 
-const CreateOrEditParodyForm = ({ original, parody, mode, setMode }) => {
+const CreateOrEditParodyForm = ({ original, parody, setParody, mode, setMode }) => {
   const [user, setUser] = useState(undefined)
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const CreateOrEditParodyForm = ({ original, parody, mode, setMode }) => {
   }
 
   const submitCreateParody = (values) => {
-    const parody = {
+    const newParody = {
       originalGeniusID: original.id,
       author: user.username,
       title: values.title,
@@ -47,12 +47,15 @@ const CreateOrEditParodyForm = ({ original, parody, mode, setMode }) => {
     }
 
     if (mode === MODE.CREATE) {
-      parodyService.createParody(parody).then((response) => {
+      parodyService.createParody(newParody).then((response) => {
         location.href = `${location.href}${response._id}`
       })
     } else if (mode === MODE.EDIT) {
-      // TODO: actually update via service
-      setMode(MODE.VIEW)
+      newParody._id = parody._id
+      parodyService.updateParody(newParody).then((response) => {
+        setParody(newParody)
+        setMode(MODE.VIEW)
+      })
     }
   }
 
@@ -108,6 +111,7 @@ const CreateOrEditParodyForm = ({ original, parody, mode, setMode }) => {
 CreateOrEditParodyForm.propTypes = {
   original: songShape.isRequired,
   parody: parodyShape,
+  setParody: PropTypes.func.isRequired,
   mode: PropTypes.oneOf([MODE.CREATE, MODE.EDIT, MODE.VIEW]).isRequired,
   setMode: PropTypes.func.isRequired
 }

@@ -116,10 +116,10 @@ const Profile = () => {
             </div>
           </div>
           <div className='row mt-4'>
-            <div className='col'>
+            <div className='col-md'>
               <ProfileInfoForm user={user} />
             </div>
-            <div className='col'>
+            <div className='col-md'>
               <ParodyList user={user} yours={true} />
               <LikesList user={user} yours={true} />
             </div>

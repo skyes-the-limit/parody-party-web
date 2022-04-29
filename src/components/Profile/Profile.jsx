@@ -37,11 +37,11 @@ their profile
 
 const Profile = () => {
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(undefined)
   const { username } = useParams() || null
 
   useEffect(() => {
-    if (!user) {
+    if (user === undefined) {
       if (username) {
         usersService.findUserByUsername(username).then(response => {
           setUser(response)
@@ -110,8 +110,8 @@ const Profile = () => {
       {!username && user && (
         <div>
           <div className='row'>
-            <div className='d-flex align-items-center justify-content-center mt-4'>
-              <h1 className='d-inline mb-0 me-5'>Hello {user.displayName || user.username}</h1>
+            <div className='d-flex align-items-center justify-content-between mt-4'>
+              <h1 className='d-inline m-0'>Hello {user.displayName || user.username}</h1>
               <button type='button' className='btn btn-dark' onClick={logout}>Logout</button>
             </div>
           </div>

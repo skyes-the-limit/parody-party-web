@@ -25,24 +25,26 @@ on the search result. The details page must fulfill the following requirements.
 */
 
 const Parody = ({ initialMode = MODE.VIEW }) => {
-  const [user, setUser] = useState(false)
+  const [user, setUser] = useState(undefined)
   const [mode, setMode] = useState(initialMode)
   const [original, setOriginal] = useState(null)
   const [parody, setParody] = useState(null)
   const { originalId, parodyId } = useParams()
 
   useEffect(() => {
-    authService.profile().then(response => {
-      setUser(response)
-    }).catch((error) => {
-      // TODO: Caught "error" HTTP status still logs to console
-      if (error.response.status === 503) {
-        setUser(null)
-      } else {
-        throw error
-      }
-    })
-  })
+    if (user === undefined) {
+      authService.profile().then(response => {
+        setUser(response)
+      }).catch((error) => {
+        // TODO: Caught "error" HTTP status still logs to console
+        if (error.response.status === 503) {
+          setUser(null)
+        } else {
+          throw error
+        }
+      })
+    }
+  }, [user])
 
   useEffect(() => {
     if (!original) {
@@ -64,8 +66,7 @@ const Parody = ({ initialMode = MODE.VIEW }) => {
 
   return (
     <div className='my-4 mx-auto' style={{ maxWidth: '48em' }}>
-      <h5>Original:</h5>
-      <h6>
+      <h6>Original:{' '}
         <a
           href={original.url}
           target='_blank'
@@ -76,15 +77,26 @@ const Parody = ({ initialMode = MODE.VIEW }) => {
       </h6>
 
       {parody && mode === MODE.VIEW && (
-        <div>
-          <h5>Parody:
+        <>
+          <div className='d-flex align-items-center justify-content-between my-4'>
+            <h2 className='d-inline-block m-0'>
+              {parody.title} by {parody.author}
+            </h2>
             {user && user.username === parody.author && (
               <button type='button' className='btn btn-dark' onClick={() => setMode(MODE.EDIT)}>Edit</button>
             )}
-          </h5>
-          <h6>{parody.title} by {parody.author}</h6>
+            {user && user.username !== parody.author && (
+              // TODO: Like functionality
+              <button type='button' className='btn btn-dark' onClick={() => console.log('like parody')}>Like</button>
+            )}
+          </div>
+
           <div style={{ whiteSpace: 'pre-wrap' }}>{parody.lyrics}</div>
-        </div>
+
+          <div className='my-4'>
+            <span className='badge bg-primary rounded-pill'>{parody.likes} likes</span>
+          </div>
+        </>
       )}
 
       {(mode === MODE.CREATE || mode === MODE.EDIT) && (

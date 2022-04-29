@@ -77,7 +77,9 @@ const Parody = ({ initialMode = MODE.VIEW }) => {
 
   if (!original || (!parody && mode !== MODE.CREATE)) {
     return (
-      <div>Loading...</div>
+      <div className='my-4 mx-auto' style={{ maxWidth: '48em' }}>
+        <h6>Loading...</h6>
+      </div>
     )
   }
 

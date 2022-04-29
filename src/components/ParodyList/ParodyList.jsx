@@ -29,7 +29,7 @@ const ParodyList = ({ user, yours }) => {
 
   useEffect(() => {
     if (user && !yourParodies) {
-      parodyService.findParodyByAuthor(user.username).then((response) => { setYourParodies(response || []) })
+      parodyService.findParodiesByAuthor(user.username).then((response) => { setYourParodies(response || []) })
     }
   }, [user, yourParodies])
 

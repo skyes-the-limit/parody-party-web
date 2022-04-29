@@ -8,17 +8,34 @@ const findAllParodies = async () => {
   return response.data
 }
 
-const findParodyByOriginal = async (originalGeniusID) => {
+const findVerifiedParodies = async () => {
+  const response = await axios.get(`${PARODY_API}/verified`)
+
+  let foundParodies = []
+  response.data.forEach(author => {
+    foundParodies = foundParodies.concat(author.parodies)
+  })
+
+  return foundParodies
+}
+
+const findParodiesByOriginal = async (originalGeniusID) => {
   const response = await axios.get(`${PARODY_API}/original/${originalGeniusID}`)
   return response.data
 }
 
+const findVerifiedParodiesByOriginal = async (originalGeniusID) => {
+  // TODO: Implement this in the server in a proper Mongo way
+  const response = await findVerifiedParodies()
+  return response.filter(parody => { return parody.originalGeniusID === originalGeniusID })
+}
+
 const findParodyById = async (parodyId) => {
-  const response = await axios.get(`${PARODY_API}/${parodyId}`)
+  const response = await axios.get(`${PARODY_API}/id/${parodyId}`)
   return response.data
 }
 
-const findParodyByAuthor = async (authorUsername) => {
+const findParodiesByAuthor = async (authorUsername) => {
   const response = await axios.get(`${PARODY_API}/author/${authorUsername}`)
   return response.data
 }
@@ -40,9 +57,11 @@ const deleteParody = async (parodyId) => {
 
 export default {
   findAllParodies,
-  findParodyByOriginal,
+  findVerifiedParodies,
+  findParodiesByOriginal,
+  findVerifiedParodiesByOriginal,
   findParodyById,
-  findParodyByAuthor,
+  findParodiesByAuthor,
   createParody,
   updateParody,
   deleteParody

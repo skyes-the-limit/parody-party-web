@@ -38,8 +38,8 @@ ParodyPreview.propTypes = {
 }
 
 const Home = () => {
-  const [topParodies, setTopParodies] = useState(null)
-  const [yourParodies, setYourParodies] = useState(null)
+  const [topParodies, setTopParodies] = useState(undefined)
+  const [yourParodies, setYourParodies] = useState(undefined)
   const [user, setUser] = useState(undefined)
 
   useEffect(() => {
@@ -58,13 +58,15 @@ const Home = () => {
   }, [user])
 
   useEffect(() => {
-    if (user && !yourParodies) {
-      parodyService.findParodyByAuthor(user.username).then((response) => { setYourParodies(response || []) })
+    if (user && yourParodies === undefined) {
+      parodyService.findParodiesByAuthor(user.username).then((response) => { setYourParodies(response || []) })
     }
   }, [user, yourParodies])
 
   useEffect(() => {
-    parodyService.findAllParodies().then((response) => { setTopParodies(response) })
+    if (topParodies === undefined) {
+      parodyService.findVerifiedParodies().then(response => { setTopParodies(response) })
+    }
   }, [topParodies])
 
   return (

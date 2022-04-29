@@ -24,21 +24,19 @@ const Song = ({ song }) => {
   const [results, setResults] = useState(null)
 
   useEffect(() => {
-    parodyService.findParodyByOriginal(song.id).then((response) => { setResults(response) })
+    parodyService.findVerifiedParodiesByOriginal(song.id).then((response) => { setResults(response) })
   }, [song])
 
   return (
     <div className='card mb-3'>
       <h3 className='card-header'>{song.title}</h3>
-      {!results && (
-        <div className='card-body'>
-          <span className='text-muted'>Loading...</span>
-        </div>
-      )}
       <div className='card-body'>
-        <h5 className='card-title'>{song.artist_names}</h5>
+        <h5 className='card-title mb-0'>{song.artist_names}</h5>
+        {!results && (
+          <span className='text-muted'>Loading...</span>
+        )}
         {results && results.length === 0 && (
-          <h6 className='card-subtitle text-muted'>No parodies of this song yet</h6>
+          <h6 className='card-subtitle text-muted mt-2'>No parodies of this song yet</h6>
         )}
       </div>
       {results && results.length > 0 && (

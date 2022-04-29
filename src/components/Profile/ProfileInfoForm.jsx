@@ -121,7 +121,7 @@ const ProfileInfoForm = ({ user }) => {
                 </div>
                 {user.role === 'user' && (
                   <small id='displayNameHelp' className='form-text text-muted'>
-                    Other users will not be able to see your parodies until an admin verifies your account.
+                    Your parodies will be unlisted until an admin verifies your account.
                   </small>
                 )}
               </div>

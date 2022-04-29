@@ -6,6 +6,7 @@ import usersService from '../../services/users-service'
 import authService from '../../services/auth-service'
 import ProfileInfoForm from './ProfileInfoForm'
 import ParodyList from '../ParodyList/ParodyList'
+import LikesList from './LikesList'
 
 /*
 The profile page where users can see all the information about themselves and other users. It could have several
@@ -102,6 +103,7 @@ const Profile = () => {
         <div className='mt-4'>
           <h1>{user.displayName || user.username}&#39;s Profile</h1>
           <ParodyList user={user} yours={false} />
+          <LikesList user={user} yours={false} />
         </div>
       )}
 
@@ -119,7 +121,7 @@ const Profile = () => {
             </div>
             <div className='col'>
               <ParodyList user={user} yours={true} />
-              <h2>Your Comments</h2>
+              <LikesList user={user} yours={true} />
             </div>
           </div>
         </div>

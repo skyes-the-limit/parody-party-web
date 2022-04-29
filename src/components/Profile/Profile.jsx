@@ -16,7 +16,7 @@ their profile
 [ ] Must allow users to change their personal information. If a user is logged in then they can see their profile
     including sensitive information such as email and phone
 [X] Must be accessible to other users including anonymous users
-[ ] Must hide personal/private information from others visiting the profile. If a user is visiting someone else's
+[X] Must hide personal/private information from others visiting the profile. If a user is visiting someone else's
     profile, then they can't see that other user's sensitive information
 [X] Must be mapped to '/profile' for displaying the profile of the currently logged in user
 [X] Must be mapped to '/profile/{profileId}' for displaying someone elses profile
@@ -55,7 +55,6 @@ const Profile = () => {
         })
       } else {
         authService.profile().then(response => {
-          console.log(response)
           setUser(response)
           setLoading(false)
         }).catch((error) => {
@@ -70,6 +69,12 @@ const Profile = () => {
       }
     }
   })
+
+  const logout = () => {
+    authService.logout().then(() => {
+      location.href = location.origin
+    })
+  }
 
   if (loading) {
     return (
@@ -91,8 +96,6 @@ const Profile = () => {
     )
   }
 
-  console.log(user)
-
   return (
     <>
       {username && user && (
@@ -107,7 +110,7 @@ const Profile = () => {
           <div className='row'>
             <div className='d-flex align-items-center justify-content-center mt-4'>
               <h1 className='d-inline mb-0 me-5'>Hello {user.displayName || user.username}</h1>
-              <button type='button' className='btn btn-dark' onClick={() => authService.logout()}>Logout</button>
+              <button type='button' className='btn btn-dark' onClick={logout}>Logout</button>
             </div>
           </div>
           <div className='row mt-4'>

@@ -52,7 +52,7 @@ const ParodyList = ({ user, yours }) => {
 
 ParodyList.propTypes = {
   user: userShape,
-  yours: PropTypes.boolean
+  yours: PropTypes.bool
 }
 
 export default ParodyList

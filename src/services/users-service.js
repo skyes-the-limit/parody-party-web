@@ -10,7 +10,7 @@ const findUserByUsername = async (username) => {
 }
 
 const findUsersAwaitingVerification = async () => {
-  const response = await axios.get(`${USERS_API}/verification`)
+  const response = await axios.get(`${USERS_API}/verification/awaiting`)
   return response.data
 }
 
@@ -24,17 +24,16 @@ const createAccount = async (username, password) => {
   return response.data
 }
 
-const grantCreatorRole = async (username) => {
-  const response = await axios.post(`${USERS_API}/creator/`, { username })
+const grantCreatorRole = async (id) => {
+  const response = await axios.put(`${USERS_API}/creator/${id}`)
   return response.data
 }
 
-const grantAdminRole = async (username) => {
-  const response = await axios.post(`${USERS_API}/admin/`, { username })
+const grantAdminRole = async (id) => {
+  const response = await axios.put(`${USERS_API}/admin/${id}`)
   return response.data
 }
 
-// app.put(`${USERS_API_BASE}/verify/:id`, requestVerification)
 const requestVerification = async (id) => {
   const response = await axios.put(`${USERS_API}/verify/${id}`)
   return response.data

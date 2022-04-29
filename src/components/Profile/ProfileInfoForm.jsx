@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React from 'react'
+import React, { useState } from 'react'
 import * as Yup from 'yup'
 import { Field, Form, Formik } from 'formik'
 import cx from 'classnames'
@@ -20,7 +20,9 @@ const ProfileSchema = Yup.object().shape({
     .required('Required')
 })
 
-const ProfileInfoForm = ({ user }) => {
+const ProfileInfoForm = ({ initialUser }) => {
+  const [user, setUser] = useState(initialUser)
+
   const updateDisplayName = (newDisplayName) => {
 
   }
@@ -31,8 +33,11 @@ const ProfileInfoForm = ({ user }) => {
 
   const requestVerification = () => {
     usersService.requestVerification(user._id).then((response) => {
-      console.log(response)
-      user.requestedVerification = true
+      // Force re-render by reassigning state
+      setUser({
+        ...user,
+        requestedVerification: true
+      })
     })
   }
 
@@ -153,7 +158,7 @@ const ProfileInfoForm = ({ user }) => {
 }
 
 ProfileInfoForm.propTypes = {
-  user: userShape
+  initialUser: userShape
 }
 
 export default ProfileInfoForm

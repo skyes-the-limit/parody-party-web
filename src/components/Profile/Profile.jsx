@@ -21,7 +21,7 @@ their profile
     profile, then they can't see that other user's sensitive information
 [X] Must be mapped to '/profile' for displaying the profile of the currently logged in user
 [X] Must be mapped to '/profile/{profileId}' for displaying someone elses profile
-[ ] Must group similar/related data into distinguishable groups, e.g., Following, Followers, Review, Favorites, etc.
+[X] Must group similar/related data into distinguishable groups, e.g., Following, Followers, Review, Favorites, etc.
 
 [ ] Must display lists of snippets and links of all data related to a user. For instance, display a list of links to all
     the favorite movies, list of links of users they are following, etc. For instance:

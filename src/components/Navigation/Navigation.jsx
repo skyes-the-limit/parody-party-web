@@ -42,8 +42,7 @@ const Navigation = () => {
                   to='/profile'
                   className={(navData) => cx('nav-link', navData.isActive ? 'active' : '')}
                 >
-                  {/* TODO: Make the text the user's display name */}
-                  Profile
+                  {user.displayName || user.username}
                 </NavLink>
               </li>
             ) : (

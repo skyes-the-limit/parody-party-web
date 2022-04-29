@@ -49,7 +49,6 @@ const Song = ({ song }) => {
         </ul>
       )}
       <div className='card-footer'>
-        {/* Link should direct to Login if user is unauthenticated */}
         <Link to={`/details/${song.id}/`} className='card-link'>
           <button type='button' className='btn btn-dark'>
             Parody this song

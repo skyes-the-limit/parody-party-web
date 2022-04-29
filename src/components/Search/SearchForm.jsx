@@ -40,8 +40,8 @@ const SearchForm = () => {
       }}
     >
       {({ errors, touched }) => (
-        <Form className='d-flex me-auto'>
-          <Field name='query' className='form-control me-sm-2' />
+        <Form className='d-flex align-items-center'>
+          <Field name='query' className='form-control me-2' style={{ maxHeight: '34px' }} />
 
           <button
             type='submit'

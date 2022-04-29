@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import parodyService from '../../services/parody-service.js'
 import authService from '../../services/auth-service.js'
 import parodyShape from '../../definitions/parody-shape.js'
+import ParodyList from '../ParodyList/ParodyList.jsx'
 
 /*
 Home - this is the landing page of your web application. It is the first page users should see when they visit your
@@ -81,19 +82,7 @@ const Home = () => {
       </ul>
 
       {user && (
-        <div className='mt-4'>
-          <h2>Your Parodies</h2>
-          {yourParodies && yourParodies.length === 0 && (
-            <p>It looks like you haven&apos;t written any parodies yet!</p>
-          )}
-          {yourParodies && yourParodies.length > 0 && (
-            <ul className='list-group'>
-              {yourParodies && yourParodies.map((parody, index) => (
-                <ParodyPreview parody={parody} key={`parody-${index}`} />
-              ))}
-            </ul>
-          )}
-        </div>
+        <ParodyList user={user} yours={true} />
       )}
     </div>
   )

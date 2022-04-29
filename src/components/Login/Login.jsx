@@ -155,7 +155,7 @@ const Login = () => {
   }
 
   const submitCreateAccount = (values) => {
-    signUp(values.username, values.password).then(response => {
+    signUp(values.displayName, values.username, values.password).then(response => {
       setUser(response)
     }).catch((error) => {
       if (error.response.status === 403) {

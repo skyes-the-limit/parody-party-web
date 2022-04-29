@@ -5,8 +5,8 @@ const AUTH_API = `${API_BASE}/auth`
 
 const api = axios.create({ withCredentials: true })
 
-export const signUp = async (username, password) => {
-  const response = await api.post(`${AUTH_API}/signup`, { username, password })
+export const signUp = async (displayName, username, password) => {
+  const response = await api.post(`${AUTH_API}/signup`, { displayName, username, password })
   return response.data
 }
 

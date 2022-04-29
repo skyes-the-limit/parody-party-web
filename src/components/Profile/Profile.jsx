@@ -1,12 +1,13 @@
 /* eslint-disable max-len */
 import React, { useEffect, useState } from 'react'
-import { Navigate, useParams } from 'react-router-dom'
+import { Navigate, useLocation, useParams } from 'react-router-dom'
 
 import usersService from '../../services/users-service'
 import authService from '../../services/auth-service'
 import ProfileInfoForm from './ProfileInfoForm'
 import ParodyList from '../ParodyList/ParodyList'
 import LikesList from './LikesList'
+import VerifyUsers from './VerifyUsers'
 
 /*
 The profile page where users can see all the information about themselves and other users. It could have several
@@ -39,6 +40,11 @@ const Profile = () => {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(undefined)
   const { username } = useParams() || null
+  const locationRoute = useLocation()
+
+  useEffect(() => {
+    setUser(undefined)
+  }, [locationRoute])
 
   useEffect(() => {
     if (user === undefined) {
@@ -117,11 +123,14 @@ const Profile = () => {
           </div>
           <div className='row mt-4'>
             <div className='col-md'>
-              <ProfileInfoForm user={user} />
+              <ProfileInfoForm initialUser={user} />
             </div>
             <div className='col-md'>
               <ParodyList user={user} yours={true} />
               <LikesList user={user} yours={true} />
+              {user.role === 'admin' && (
+                <VerifyUsers />
+              )}
             </div>
           </div>
         </div>

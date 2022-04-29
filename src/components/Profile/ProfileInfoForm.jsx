@@ -1,10 +1,11 @@
 /* eslint-disable max-len */
-import React from 'react'
+import React, { useState } from 'react'
 import * as Yup from 'yup'
 import { Field, Form, Formik } from 'formik'
 import cx from 'classnames'
 
 import userShape from '../../definitions/user-shape'
+import usersService from '../../services/users-service'
 
 const ProfileSchema = Yup.object().shape({
   displayName: Yup.string(),
@@ -19,7 +20,27 @@ const ProfileSchema = Yup.object().shape({
     .required('Required')
 })
 
-const ProfileInfoForm = ({ user }) => {
+const ProfileInfoForm = ({ initialUser }) => {
+  const [user, setUser] = useState(initialUser)
+
+  const updateDisplayName = (newDisplayName) => {
+
+  }
+
+  const updatePassword = (newPassword) => {
+
+  }
+
+  const requestVerification = () => {
+    usersService.requestVerification(user._id).then((response) => {
+      // Force re-render by reassigning state
+      setUser({
+        ...user,
+        requestedVerification: true
+      })
+    })
+  }
+
   return (
     <div className='card border-primary mb-3' style={{ maxWidth: '32em' }}>
       <div className='card-header'>
@@ -54,7 +75,7 @@ const ProfileInfoForm = ({ user }) => {
                       type='button'
                       id='update-displayName'
                       disabled={errors.displayName}
-                      onClick={() => { console.log(values.displayName) }} // TODO
+                      onClick={updateDisplayName(values.displayName)}
                     >
                       Update
                     </button>
@@ -89,7 +110,7 @@ const ProfileInfoForm = ({ user }) => {
                     type='button'
                     id='update-password'
                     disabled={errors.password}
-                    onClick={() => { console.log(values.password) }} // TODO
+                    onClick={updatePassword(values.password)}
                   >
                     Update
                   </button>
@@ -101,30 +122,33 @@ const ProfileInfoForm = ({ user }) => {
                 }
               </div>
 
-              <div className='form-group'>
-                <label htmlFor='role' className='form-label mt-4'>Role</label>
-                <div className='input-group'>
-                  <Field
-                    name='role'
-                    id='roleField'
-                    className='form-control'
-                    readOnly
-                  />
-                  <button
-                    className='btn btn-primary'
-                    type='button'
-                    id='verify-role'
-                    onClick={() => { console.log(values.role) }} // TODO
-                  >
-                    Request verification
-                  </button>
+              {user.role === 'user' && (
+                <div className='form-group'>
+                  <label htmlFor='role' className='form-label mt-4'>Role</label>
+                  <div className='input-group'>
+                    <Field
+                      name='role'
+                      id='roleField'
+                      className='form-control'
+                      readOnly
+                    />
+                    <button
+                      className='btn btn-primary'
+                      type='button'
+                      id='verify-role'
+                      disabled={user.requestedVerification}
+                      onClick={requestVerification}
+                    >
+                      {user.requestedVerification ? 'Awaiting Verification' : 'Request Verification'}
+                    </button>
+                  </div>
+                  {user.role === 'user' && (
+                    <small id='displayNameHelp' className='form-text text-muted'>
+                      Your parodies will be unlisted until an admin verifies your account.
+                    </small>
+                  )}
                 </div>
-                {user.role === 'user' && (
-                  <small id='displayNameHelp' className='form-text text-muted'>
-                    Your parodies will be unlisted until an admin verifies your account.
-                  </small>
-                )}
-              </div>
+              )}
             </Form>
           )}
         </Formik>
@@ -134,7 +158,7 @@ const ProfileInfoForm = ({ user }) => {
 }
 
 ProfileInfoForm.propTypes = {
-  user: userShape
+  initialUser: userShape
 }
 
 export default ProfileInfoForm

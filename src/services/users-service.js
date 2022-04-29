@@ -9,6 +9,11 @@ const findUserByUsername = async (username) => {
   return user
 }
 
+const findUsersAwaitingVerification = async () => {
+  const response = await axios.get(`${USERS_API}/verification/awaiting`)
+  return response.data
+}
+
 const login = async (username, password) => {
   const response = await axios.post(`${USERS_API}/credentials`, { username, password })
   return response.data
@@ -19,13 +24,18 @@ const createAccount = async (username, password) => {
   return response.data
 }
 
-const grantCreatorRole = async (username) => {
-  const response = await axios.post(`${USERS_API}/creator/`, { username })
+const grantCreatorRole = async (id) => {
+  const response = await axios.put(`${USERS_API}/creator/${id}`)
   return response.data
 }
 
-const grantAdminRole = async (username) => {
-  const response = await axios.post(`${USERS_API}/admin/`, { username })
+const grantAdminRole = async (id) => {
+  const response = await axios.put(`${USERS_API}/admin/${id}`)
+  return response.data
+}
+
+const requestVerification = async (id) => {
+  const response = await axios.put(`${USERS_API}/verify/${id}`)
   return response.data
 }
 
@@ -41,10 +51,12 @@ const updatePassword = async (password) => {
 
 export default {
   findUserByUsername,
+  findUsersAwaitingVerification,
   login,
   createAccount,
   grantCreatorRole,
   grantAdminRole,
+  requestVerification,
   updateDisplayName,
   updatePassword
 }

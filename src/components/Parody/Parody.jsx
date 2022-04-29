@@ -92,7 +92,9 @@ const Parody = ({ initialMode = MODE.VIEW }) => {
             )}
             {user && user.username !== parody.author && (
               // TODO: Like functionality
-              <button type='button' className='btn btn-dark' onClick={() => console.log('like parody')}>Like</button>
+              <button type='button' className='btn btn-dark' onClick={() => authService.likeParody(parody._id)}>
+                Like
+              </button>
             )}
           </div>
 

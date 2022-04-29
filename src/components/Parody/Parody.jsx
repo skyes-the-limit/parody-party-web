@@ -26,9 +26,9 @@ on the search result. The details page must fulfill the following requirements.
 
 const Parody = ({ initialMode = MODE.VIEW }) => {
   const [user, setUser] = useState(undefined)
+  const [original, setOriginal] = useState(undefined)
+  const [parody, setParody] = useState(undefined)
   const [mode, setMode] = useState(initialMode)
-  const [original, setOriginal] = useState(null)
-  const [parody, setParody] = useState(null)
   const { originalId, parodyId } = useParams()
 
   useEffect(() => {
@@ -47,14 +47,18 @@ const Parody = ({ initialMode = MODE.VIEW }) => {
   }, [user])
 
   useEffect(() => {
-    if (!original) {
+    if (original === undefined) {
       geniusService.getSongById(originalId).then((response) => { setOriginal(response.song) })
     }
   }, [original, originalId])
 
   useEffect(() => {
-    if (!parody && mode !== MODE.CREATE) {
-      parodyService.findParodyById(parodyId).then((response) => { setParody(response) })
+    if (parody === undefined) {
+      if (mode !== MODE.CREATE) {
+        parodyService.findParodyById(parodyId).then((response) => { setParody(response) })
+      } else {
+        setParody(null)
+      }
     }
   }, [mode, parody, parodyId])
 
@@ -91,9 +95,13 @@ const Parody = ({ initialMode = MODE.VIEW }) => {
               <button type='button' className='btn btn-dark' onClick={() => setMode(MODE.EDIT)}>Edit</button>
             )}
             {user && user.username !== parody.author && (
-              // TODO: Like functionality
-              <button type='button' className='btn btn-dark' onClick={() => authService.likeParody(parody._id)}>
-                Like
+              <button type='button' className='btn btn-dark' onClick={() => {
+                authService.likeParody(parody._id)
+                setUser(undefined)
+                setParody(undefined)
+              }}>
+                {/* TODO: Copy properly switches from "Like" to "Liked" but not back for some reason */}
+                {user.likes.includes(parodyId) ? 'Liked' : 'Like'}
               </button>
             )}
           </div>

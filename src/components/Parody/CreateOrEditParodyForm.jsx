@@ -41,7 +41,7 @@ const CreateOrEditParodyForm = ({ original, parody, mode, setMode }) => {
   const submitCreateParody = (values) => {
     const parody = {
       originalGeniusID: original.id,
-      author: 'tempAuthorName', // TODO: Get current username
+      author: user.username,
       title: values.title,
       lyrics: values.lyrics
     }

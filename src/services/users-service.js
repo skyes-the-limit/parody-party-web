@@ -39,13 +39,21 @@ const requestVerification = async (id) => {
   return response.data
 }
 
-const updateDisplayName = async (displayName) => {
-  const response = await axios.post(`${USERS_API}/displayName/`, { displayName })
+const updateDisplayName = async (currentUser, displayName) => {
+  const newUser = {
+    ...currentUser,
+    displayName
+  }
+  const response = await axios.put(USERS_API, { user: newUser })
   return response.data
 }
 
-const updatePassword = async (password) => {
-  const response = await axios.post(`${USERS_API}/password/`, { password })
+const updatePassword = async (currentUser, password) => {
+  const newUser = {
+    ...currentUser,
+    password
+  }
+  const response = await axios.put(USERS_API, { user: newUser })
   return response.data
 }
 

@@ -24,11 +24,11 @@ const ProfileInfoForm = ({ initialUser }) => {
   const [user, setUser] = useState(initialUser)
 
   const updateDisplayName = (newDisplayName) => {
-
+    usersService.updateDisplayName(user, newDisplayName)
   }
 
   const updatePassword = (newPassword) => {
-
+    usersService.updatePassword(user, newPassword)
   }
 
   const requestVerification = () => {
@@ -75,7 +75,9 @@ const ProfileInfoForm = ({ initialUser }) => {
                       type='button'
                       id='update-displayName'
                       disabled={errors.displayName}
-                      onClick={updateDisplayName(values.displayName)}
+                      onClick={() => {
+                        updateDisplayName(values.displayName)
+                      }}
                     >
                       Update
                     </button>
@@ -110,7 +112,7 @@ const ProfileInfoForm = ({ initialUser }) => {
                     type='button'
                     id='update-password'
                     disabled={errors.password}
-                    onClick={updatePassword(values.password)}
+                    onClick={() => updatePassword(values.password)}
                   >
                     Update
                   </button>

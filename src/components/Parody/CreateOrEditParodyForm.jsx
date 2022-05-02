@@ -23,7 +23,7 @@ const CreateOrEditParodyForm = ({ original, parody, setParody, mode, setMode }) 
       authService.profile().then(response => {
         setUser(response)
       }).catch((error) => {
-        if (error.response.status === 503) {
+        if (error.response.status === 403) {
           // TODO: Caught "error" HTTP status still logs to console
           setUser(null)
         } else {

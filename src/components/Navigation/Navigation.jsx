@@ -14,7 +14,7 @@ const Navigation = () => {
         setUser(response)
       }).catch((error) => {
         // TODO: Caught "error" HTTP status still logs to console
-        if (error.response.status === 503) {
+        if (error.response.status === 403) {
           setUser(null)
         } else {
           throw error

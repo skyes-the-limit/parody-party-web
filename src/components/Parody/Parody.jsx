@@ -37,7 +37,7 @@ const Parody = ({ initialMode = MODE.VIEW }) => {
         setUser(response)
       }).catch((error) => {
         // TODO: Caught "error" HTTP status still logs to console
-        if (error.response.status === 503) {
+        if (error.response.status === 403) {
           setUser(null)
         } else {
           throw error
@@ -119,7 +119,6 @@ const Parody = ({ initialMode = MODE.VIEW }) => {
 
           <div style={{ whiteSpace: 'pre-wrap' }}>{parody.lyrics}</div>
 
-          {/* app.delete(`${PARODY_API_BASE}/:id`, deleteParody) */}
           <div className='my-4'>
             {user && user.username === parody.author && (
               <button type='button' className='btn btn-danger me-4' onClick={deleteParody}>Delete</button>

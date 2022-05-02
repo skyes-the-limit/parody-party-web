@@ -128,7 +128,7 @@ const Login = () => {
       profile().then(response => {
         setUser(response)
       }).catch((error) => {
-        if (error.response.status === 503) {
+        if (error.response.status === 403) {
           setUser(null)
         } else {
           throw error
